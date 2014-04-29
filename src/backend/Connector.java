@@ -1,5 +1,10 @@
 package backend;
 
+<<<<<<< HEAD
+=======
+package src.backend;
+
+>>>>>>> branch 'master' of https://github.com/worami/BITBV.git
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
