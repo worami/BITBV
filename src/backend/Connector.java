@@ -1,6 +1,6 @@
 package backend;
 
-package backend;
+package src.backend;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
