@@ -26,7 +26,7 @@ public class Connector {
             }
 
         } catch (SQLException ex) {
-            System.out.println("error eerste");
+            System.out.println("error eerste: " + ex.getMessage());
             
         } finally {
             Close();
@@ -46,7 +46,7 @@ public class Connector {
             }
 
         } catch (SQLException ex) {
-        	System.out.println("Error tweede");
+        	System.out.println("Error tweede: " + ex.getMessage());
         }
     }
 }
