@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -62,22 +64,31 @@ public class Connector {
     /**
      * Maakt een connectie, voert de query uit en sluit de connectie vervolgens weer
      * @param query
-     * @return een ResultSet met het resultaat van de query
+     * @return een List<String[]> met het resultaat van de query
      */
-    public ResultSet sql(String query){
+    public List<String[]> sql(String query){
+    	List<String[]> result = new ArrayList<String[]>();
     	this.Connect();
     	try {
 			rs = st.executeQuery(query);
+			while(rs.next()){
+				String s = "";
+				int length = rs.getMetaData().getColumnCount();
+				String[] r = new String[length];
+				for(int i = 1; length >= i; i++){
+					r[i-1] = rs.getString(i);
+				}
+				result.add(r);
+			}
 		} catch (SQLException e) {
 			System.err.println(e.getMessage());
 		}
     	this.Close();
-    	return rs;
+    	return result;
     }
     
     /**
      * Laad de connectie eigenschappen uit een properties bestand
-     * 
      */
     private void loadProperties(){
     	try {
