@@ -12,6 +12,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import calendar.CalendarItem;
+
 public class Connector {
 	Connection con = null;
     Statement st = null;
@@ -82,6 +84,25 @@ public class Connector {
 			}
 		} catch (SQLException e) {
 			System.err.println(e.getMessage());
+		}
+    	this.Close();
+    	return result;
+    }
+    
+    public List<CalendarItem> getCalendarList(){
+    	List<CalendarItem> result = new ArrayList<CalendarItem>();
+    	//List<String[]> bookings =  sql("SELECT 'Booking', 'Pickup', 'ContainerNumber', 'ImportDocNr', 'NumberColli' FROM 'modalitycontainerstatisticsinfocumm' WHERE 'Client' = 'TIMBAL'");
+    	this.Connect();
+    	try {
+			rs = st.executeQuery("SELECT `Booking`, `Pickup`, `ContainerNumber`, `ImportDocNr`, `NumberColli` FROM `modalitycontainerstatisticsinfocumm` WHERE `Client` = 'TIMBAL'");
+			//System.out.println("getCalendarList item " + rs.getInt(1));
+			while(rs.next()){
+				CalendarItem booking = new CalendarItem(rs.getInt(1), rs.getLong(2), rs.getString(3), rs.getString(4), rs.getInt(5));
+				result.add(booking);
+				
+			}
+		} catch (SQLException e) {
+			System.err.println("Error getCalendarList: " + e.getMessage());
 		}
     	this.Close();
     	return result;
