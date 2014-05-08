@@ -83,7 +83,7 @@ public class CalendarItem {
 	}
 	
 	public String toString(){
-		return containernr + " hoi";
+		return "Container: "+ containernr + ", Boeking: " + bookingnr;
 	}
 	
 	

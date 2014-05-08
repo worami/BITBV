@@ -99,7 +99,6 @@ public class Connector {
 			while(rs.next()){
 				CalendarItem booking = new CalendarItem(rs.getInt(1), rs.getLong(2), rs.getString(3), rs.getString(4), rs.getInt(5));
 				result.add(booking);
-				
 			}
 		} catch (SQLException e) {
 			System.err.println("Error getCalendarList: " + e.getMessage());

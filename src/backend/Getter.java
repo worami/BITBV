@@ -25,5 +25,9 @@ public class Getter {
 		List<String[]> containers = connection.sql("SELECT  PickupDate, ContainerNumber FROM modalitycontainerstatisticsinfocumm;");
 		return containers;
 	}
+	
+	public MongoConnector getMongoConnecotr(){
+		return mongo;
+	}
 
 }

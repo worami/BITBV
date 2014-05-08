@@ -29,6 +29,26 @@ public class MongoConnector {
 	Properties props = new Properties();
 	final String DBprops = "database.proprties";
 	
+	final String CALENDARITEMS = "calendar_items";
+	
+	final String OPERATORID = "operatorid";
+	final String TEMPLATETYPE = "templatetype";
+	final String TYPEID = "typeid";
+	final String ID = "id";
+	final String CALLS = "calls";
+	final String ALLDAY = "allDay";
+	final String START = "start";
+	final String END = "end";
+	final String BOOKINGNR = "bookingnr";
+	final String CONTAINERNR = "containernr";
+	final String MRN = "mrn";
+	final String KARTONS = "kartons";
+	final String UNITS = "units";
+	final String BESCHIKBAAR= "beschikbaarop";
+	final String GASMETING = "gasmeting";
+	final String CATEGORIE = "categorie";
+	final String OPMERKINGEN = "opmerkingen";
+	
 	final String DBtemptype = "bitbv";
 	final int DBoperatorid = 4; 
 	
@@ -53,7 +73,7 @@ public class MongoConnector {
 	
 	public List<String[]> getData(){
 		List<String[]> result = new ArrayList<String[]>();
-		DBCollection coll = db.getCollection("calendar_items");
+		DBCollection coll = db.getCollection(CALENDARITEMS);
 		System.out.println("Count: " + coll.getCount());
 		
 		BasicDBObject query = new BasicDBObject();
@@ -76,10 +96,10 @@ public class MongoConnector {
 		return result;
 	}
 	
-	private DBObject getOrder(int bookingnr){
+	private DBObject getCalendarItem(CalendarItem item){
 		DBObject result = null;
-		DBCollection col = db.getCollection("calendar_items");
-		BasicDBObject query = new BasicDBObject("bookingnr", bookingnr);
+		DBCollection col = db.getCollection(CALENDARITEMS);
+		BasicDBObject query = new BasicDBObject(BOOKINGNR, item.getBookingnr()).append(CONTAINERNR, item.getContainernr());
 		DBCursor cursor = col.find(query);
 		try {
 			   while(cursor.hasNext()) {
@@ -92,53 +112,88 @@ public class MongoConnector {
 	}
 	
 	/**
-	 * Kijkt of 
-	 * @param bookingnr
+	 * Kijkt of booking met container al in db staat
+	 * @param item
 	 * @return
 	 */
-	public boolean bookingInDB(int bookingnr){
-		return (getOrder(bookingnr) != null);
+	public boolean bookingInDB(CalendarItem item){
+		return (getCalendarItem(item) != null);
 	}
 	
 	public void putCalendarItem(CalendarItem item){
-		if(!bookingInDB(item.getBookingnr())){
-			System.out.println("Yeah, nieuw claendar item!");
-			BasicDBObject put = new BasicDBObject("operatorid", DBoperatorid).
-					append("templatetype", DBtemptype).
-					append("typeid", 5).
-					//append("id", 12345).
-					//append("calls", "12345").
-					append("allDay", false).
-					append("start", item.getStart()).
-					append("end", item.getEind()).
-					append("bookingnr", item.getBookingnr()).
-					append("containernr", item.getContainernr()).
-					append("mrn", item.getMRN()).
-					append("kartons", item.getKartons()).
-					append("units", item.getUnits()).
-					append("beschikbaarop", item.getBeschikbaarOp()).
-					append("gasmeting", item.getGasmeting()).
-					append("categorie", item.getCategorie()).
-					append("opmerkingen", item.getOpmerkingen());
+		if(!bookingInDB(item)){
+			System.out.println("Yeah, nieuw calendar item!");
+			newCalendarItem(item);
 			
-			DBCollection coll = db.getCollection("calendar_items");
-			coll.insert(put);
-			
-			/** check of het item in de db staat */
+			/** check of het item in de db staat *//*
 			if(!put.equals(coll.findOne())){
 				System.err.println("Calendar put mislukt: " + coll.findOne().toString());
 			} else {
 				System.out.println("Calendar put");
-			}
-		} 
+			}*/
+		} else {
+			//System.out.println("Yeah, update calendar item!");
+			updateCalendarItem(item);
+		}
 	}
 	
-	public void updateCaledarItem(int bookingnr){
-		BasicDBObject newDocument = new BasicDBObject().append("$set", new BasicDBObject().append("clients", 110));
-	 
-		BasicDBObject searchQuery = new BasicDBObject().append("hosting", "hostB");
-	 
-		db.getCollection("calendar_items").update(searchQuery, newDocument);
+	private void newCalendarItem(CalendarItem item){
+		BasicDBObject put = newBasicDBObject(item);
+		DBCollection coll = db.getCollection(CALENDARITEMS);
+		coll.insert(put);
+	}
+	
+	private void updateCalendarItem(CalendarItem item){
+		//BasicDBObject newDocument = new BasicDBObject();
+		
+		//newDocument.append("$set", newBasicDBObject(item));
+		//BasicDBObject searchQuery = new BasicDBObject().append(BOOKINGNR, item.getBookingnr());
+		DBObject updated = getCalendarItem(item);
+		//System.out.println("Calendar " + updated.toString());
+		//db.getCollection(CALENDARITEMS).update(searchQuery, newDocument);
+		db.getCollection(CALENDARITEMS).save(updateDBObject(item, updated));
+	}
+	
+	private DBObject updateDBObject(CalendarItem item, DBObject updated){
+		 updated.put(OPERATORID, DBoperatorid);
+		 updated.put(TEMPLATETYPE, DBtemptype);
+		 updated.put(TYPEID, 5);
+				//put(ID, 12345).
+				//put(CALLS, "12345").
+		 updated.put(ALLDAY, false);
+		 updated.put(START, item.getStart());
+		 updated.put(END, item.getEind());
+		 updated.put(BOOKINGNR, item.getBookingnr());
+		 updated.put(CONTAINERNR, item.getContainernr());
+		 updated.put(MRN, item.getMRN());
+		 updated.put(KARTONS, item.getKartons());
+		 updated.put(UNITS, item.getUnits());
+		 updated.put(BESCHIKBAAR, item.getBeschikbaarOp());
+		 updated.put(GASMETING, item.getGasmeting());
+		 updated.put(CATEGORIE, item.getCategorie());
+		 updated.put(OPMERKINGEN, item.getOpmerkingen());
+		 
+		 return updated;
+	}
+	
+	private BasicDBObject newBasicDBObject(CalendarItem item){
+		return new BasicDBObject(OPERATORID, DBoperatorid).
+			append(TEMPLATETYPE, DBtemptype).
+			append(TYPEID, 5).
+			//append(ID, 12345).
+			//append(CALLS, "12345").
+			append(ALLDAY, false).
+			append(START, item.getStart()).
+			append(END, item.getEind()).
+			append(BOOKINGNR, item.getBookingnr()).
+			append(CONTAINERNR, item.getContainernr()).
+			append(MRN, item.getMRN()).
+			append(KARTONS, item.getKartons()).
+			append(UNITS, item.getUnits()).
+			append(BESCHIKBAAR, item.getBeschikbaarOp()).
+			append(GASMETING, item.getGasmeting()).
+			append(CATEGORIE, item.getCategorie()).
+			append(OPMERKINGEN, item.getOpmerkingen());
 	}
 	
 	/**
@@ -150,6 +205,11 @@ public class MongoConnector {
 		for (String s : colls) {
 		    System.out.println(s);
 		}
+	}
+	
+	public void deleteObjects(){
+		BasicDBObject searchQuery = new BasicDBObject().append(TEMPLATETYPE, DBtemptype);
+		db.getCollection(CALENDARITEMS).remove(searchQuery);
 	}
 	
 	private void loadProperties(){
