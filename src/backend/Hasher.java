@@ -38,9 +38,10 @@ public class Hasher {
 		bin_cnr2 += Long.toBinaryString(l_cnr2);
 		bin_cnr2 = bin_cnr2.substring(bin_cnr2.length()-24);
 
+		/* Code voor debuggen
 		System.out.println(bin_bookingnr);
 		System.out.println(bin_cnr1);
-		System.out.println(bin_cnr2);
+		System.out.println(bin_cnr2);*/
 		
 		String hashString = bin_bookingnr + bin_cnr1 + bin_cnr2;
 		return Long.parseLong(hashString,2);
