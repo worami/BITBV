@@ -3,13 +3,6 @@ package backend;
 public class Hasher {
 	
 	/**
-	 * Constructor; doet verder niks
-	 */
-	public Hasher() {
-		
-	}
-
-	/**
 	 * Levert een unieke long op op basis van een bookingnummer en een containernummer.
 	 * BELANGRIJK: bookingnummer moet kleiner zijn dan 524288, containernummer moet beginnen met 4 hoofdletters gevolgd door 7 nummers. 
 	 * Containernummer mag spaties bevatten
@@ -17,7 +10,7 @@ public class Hasher {
 	 * @param containernr Het containernummer (bijvoorbeeld "CMPU 194670 5")
 	 * @return unieke hash
 	 */
-	public long hash(int bookingnr, String containernr) {
+	public static long hash(int bookingnr, String containernr) {
 	
 		String cleanContainerNr = clean(containernr);
 		
@@ -47,12 +40,12 @@ public class Hasher {
 		return Long.parseLong(hashString,2);
 	}
 	
-	private String clean(String str) { //even apart gemaakt ivm testing
+	private static String clean(String str) { //even apart gemaakt ivm testing
 		return str.replaceAll(" ","");
 	}
 	
 	//requires length 4, allemaal hoofdletters
-	private int nr(String str) {
+	private static int nr(String str) {
 		int result = 0;
 		for (int i = 0; i < 4; i++) {
 			result += (str.charAt(i) - 'A') * Math.pow(26,3-i);
