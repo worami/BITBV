@@ -26,20 +26,20 @@ public class testjessss {
 		get.synchronize();
 		
 		//get.getMongoConnecotr().deleteObjects();
-		get.getMongoConnecotr().getData();
-
+		//get.getMongoConnecotr().getData();
+		/**
 		while(true){
 			//long millis = System.currentTimeMillis();
 			
 			try {
-				get.synchronize();
-				System.out.println("update!");
+				//get.synchronize();
+				//System.out.println("update!");
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
+		}**/
 		
 		//more.getData();
 		//536b79d785ca09d7cf491ffb
