@@ -1,5 +1,7 @@
 package calendar;
 
+import java.text.SimpleDateFormat;
+
 import backend.Hasher;
 import backend.httppusher;
 
@@ -62,6 +64,20 @@ public class CalendarItem {
 		this.opmerkingen = "Test";
 	}
 	
+	/**
+	 * 
+	 * @param bookingnr
+	 * @param start
+	 * @param containernr
+	 * @param mrn
+	 * @param kartons
+	 * @param units
+	 * @param ETA
+	 * @param gasmeting
+	 * @param categorie
+	 * @param status
+	 * @param opmerkingen
+	 */
 	public CalendarItem(int bookingnr, long start, String containernr, String mrn, int kartons, int units, long ETA, boolean gasmeting, char categorie, int status, String opmerkingen){
 		this.bookingnr = bookingnr;
 		this.start = start;
@@ -173,6 +189,9 @@ public class CalendarItem {
 	}
 	
 	public String toHTTPString(){
+		SimpleDateFormat sdf = new SimpleDateFormat("EEE d MMM yyyy 'om' HH:mm");
+		String date = "\"" + sdf.format(this.getBeschikbaarOp()) + "\"";
+		
 		String result = "{\"" + this.OPERATORID + "\":" + this.DBoperatorid + ',' +
 				"\"" + this.TEMPLATETYPE + "\":\"" + this.DBtemptype + "\"," +
 				"\"" + this.TYPEID + "\":" + this.getStatus() + ',' +
@@ -187,7 +206,7 @@ public class CalendarItem {
 				"\"" + this.KARTONS + "\":" + this.getKartons() + ',' +
 				"\"" + this.TITEL + "\":\"" + this.getKartons() + "\"," +
 				"\"" + this.UNITS + "\":" + this.getUnits() + ',' +
-				"\"" + this.BESCHIKBAAR + "\":" + this.getBeschikbaarOp() + ',' +
+				"\"" + this.BESCHIKBAAR + "\":" + date + ',' +
 				"\"" + this.GASMETING + "\":" + this.getGasmeting() + ',' +
 				"\"" + this.CATEGORIE + "\":\"" + this.getCategorie() + "\"," +
 				"\"" + this.OPMERKINGEN + "\":\"" + this.getOpmerkingen() + "\"}";

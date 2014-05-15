@@ -71,7 +71,8 @@ public class Splitter {
 		String mrn = map.get(CalendarItem.MRN);
 		int kartons = Integer.parseInt(map.get(CalendarItem.KARTONS));
 		int units = Integer.parseInt(map.get(CalendarItem.UNITS));
-		long beschikbaarop = Long.parseLong(map.get(CalendarItem.BESCHIKBAAR));
+		long beschikbaarop = 0;
+		//long beschikbaarop = Long.parseLong(map.get(CalendarItem.BESCHIKBAAR));
 		boolean gasmeting = Boolean.parseBoolean(map.get(CalendarItem.GASMETING));
 		char categorie = map.get(CalendarItem.CATEGORIE).charAt(0);
 		//om met fouten in status om te gaan

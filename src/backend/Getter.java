@@ -19,19 +19,17 @@ public class Getter {
 		own = new Connector("own.proprties");
 	}
 	
+	/**
+	 * Synchroniseert heel veel data vanuit allemaal db's
+	 */
 	public void synchronize(){
 		for(CalendarItem c : Splitter.split(http.sendGet())){
+			c.setBeschikbaarOp(0); //zet en bereken een nieuwe beschikbaar op
 			this.putCalandarItemOwn(c);
 		}
 		
 		for(CalendarItem c : this.getCalendarListInsight()){
 			http.sendPost(c);
-			
-			//if(this.bevat(getCalendarListOwn(), hashkey)){
-				
-			//} else {
-				
-			//}
 			
 			System.out.println(c.toString());
 			//http.sendPost(c);
@@ -77,6 +75,7 @@ public class Getter {
 					booking = new CalendarItem(bookingnr, start, containernr, mrn, kartons);
 				}
 				
+				//sluit de own db connectie, zou eignelijk in connecotr moeten
 				own.Close();
 				
 				result.add(booking);
@@ -84,6 +83,7 @@ public class Getter {
 		} catch (SQLException e) {
 			System.out.println("error getter getCaelndatList: " + e.getMessage());
 		}
+    	//sluit de insigt db connectie, zou eignelijk in connector moeten
     	insight.Close();
     	return result;
     }
