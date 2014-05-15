@@ -18,27 +18,27 @@ public class CalendarItem {
 	private int bookingnr; //Booking
 	private int status;
 	
-	final String OPERATORID = "operatorid";
-	final String TEMPLATETYPE = "templatetype";
-	final String TYPEID = "typeid";
-	final String ID = "id";
-	final String CALLS = "calls";
-	final String ALLDAY = "allDay";
-	final String START = "start";
-	final String END = "end";
-	final String BOOKINGNR = "bookingnr";
-	final String CONTAINERNR = "containernr";
-	final String MRN = "mrn";
-	final String KARTONS = "kartons";
-	final String UNITS = "units";
-	final String BESCHIKBAAR= "beschikbaarop";
-	final String GASMETING = "gasmeting";
-	final String CATEGORIE = "categorie";
-	final String OPMERKINGEN = "opmerkingen";
-	final String TITEL = "title";
+	public final String OPERATORID = "operatorid";
+	public final String TEMPLATETYPE = "templatetype";
+	public final String TYPEID = "typeid";
+	public final String ID = "id";
+	public final String CALLS = "calls";
+	public final String ALLDAY = "allDay";
+	public final String START = "start";
+	public final String END = "end";
+	public final String BOOKINGNR = "bookingnr";
+	public final String CONTAINERNR = "containernr";
+	public final String MRN = "mrn";
+	public final String KARTONS = "kartons";
+	public final String UNITS = "units";
+	public final String BESCHIKBAAR= "beschikbaarop";
+	public final String GASMETING = "gasmeting";
+	public final String CATEGORIE = "categorie";
+	public final String OPMERKINGEN = "opmerkingen";
+	public final String TITEL = "title";
 	
-	final String DBtemptype = "status";
-	final int DBoperatorid = 23; 
+	public final String DBtemptype = "status";
+	public final int DBoperatorid = 23; 
 	
 	/**
 	 * 
@@ -154,6 +154,18 @@ public class CalendarItem {
 	
 	public void setCategorie(char categorie){
 		this.categorie = categorie;
+	}
+	
+	public void setBeschikbaarOp(long beschikbaar){
+		this.beschikbaarop = beschikbaar;
+	}
+	
+	public void setOpmerkingen(String opmerkingen){
+		this.opmerkingen = opmerkingen;
+	}
+	
+	public void setStatus(int status){
+		this.status = status;
 	}
 	
 	public String toString(){
