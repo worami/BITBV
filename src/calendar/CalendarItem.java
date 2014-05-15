@@ -1,22 +1,22 @@
 package calendar;
 
+import backend.Hasher;
 import backend.httppusher;
 
 
 public class CalendarItem {
 	
-	long start; //Pickup  + 4
-	//long eind;
-	//int duur;
-	String containernr; //11 characters ContainerNumber
-	String mrn; //18 characters ImportDocNr
-	int kartons; //NumberColli
-	int units;
-	boolean gasmeting;
-	char categorie;
-	long beschikbaarop; //Pickup + 2
-	String opmerkingen;
-	int bookingnr; //Booking
+	private long start; //Pickup  + 4
+	private String containernr; //11 characters ContainerNumber
+	private String mrn; //18 characters ImportDocNr
+	private int kartons; //NumberColli
+	private int units;
+	private boolean gasmeting;
+	private char categorie;
+	private long beschikbaarop; //Pickup + 2
+	private String opmerkingen;
+	private int bookingnr; //Booking
+	private int status;
 	
 	final String OPERATORID = "operatorid";
 	final String TEMPLATETYPE = "templatetype";
@@ -60,6 +60,20 @@ public class CalendarItem {
 		this.categorie = 'C';
 		this.beschikbaarop = this.start;
 		this.opmerkingen = "Test";
+	}
+	
+	public CalendarItem(int bookingnr, long start, String containernr, String mrn, int kartons, int units, long ETA, boolean gasmeting, char categorie, int status, String opmerkingen){
+		this.bookingnr = bookingnr;
+		this.start = start;
+		this.containernr = containernr;
+		this.mrn = mrn;
+		this.kartons = kartons;
+		this.units = units;
+		this.beschikbaarop = ETA;
+		this.gasmeting = gasmeting;
+		this.categorie = categorie;
+		this.status = status;
+		this.opmerkingen = opmerkingen;
 	}
 	
 	public int getBookingnr(){
@@ -106,6 +120,42 @@ public class CalendarItem {
 		return opmerkingen;
 	}
 	
+	public int getStatus(){
+		return status;
+	}
+	
+	public void setBookingnr(int bookingnr){
+		this.bookingnr = bookingnr;
+	}
+	
+	public void setStart(long start){
+		this.start = start;
+	}
+	
+	public void setContainernr(String containernummer){
+		this.containernr = containernummer;
+	}
+	
+	public void setMRN(String MRN){
+		this.mrn = MRN;
+	}
+	
+	public void setKartons(int kartons){
+		this.kartons = kartons;
+	}
+	
+	public void setUnits(int units){
+		this.units = units;
+	}
+	
+	public void setGasmeting(boolean gasmeting){
+		this.gasmeting = gasmeting;
+	}
+	
+	public void setCategorie(char categorie){
+		this.categorie = categorie;
+	}
+	
 	public String toString(){
 		return "Container: "+ containernr + ", Boeking: " + bookingnr;
 	}
@@ -113,8 +163,8 @@ public class CalendarItem {
 	public String toHTTPString(){
 		String result = "{\"" + this.OPERATORID + "\":" + this.DBoperatorid + ',' +
 				"\"" + this.TEMPLATETYPE + "\":\"" + this.DBtemptype + "\"," +
-				//"\"" + this.TYPEID + "\":" + 4 + ',' +
-				"\"" + this.ID + "\":" + this.getBookingnr() + ',' +
+				"\"" + this.TYPEID + "\":" + this.getStatus() + ',' +
+				"\"" + this.ID + "\":" + Hasher.hash(this.getBookingnr(), this.getContainernr()) + ',' +
 				"\"" + this.CALLS + "\":\"" + this.getBookingnr() + "\"," +
 				"\"" + this.ALLDAY + "\":" + false + ',' +
 				"\"" + this.START + "\":" + this.getStart() + ',' +
@@ -124,16 +174,20 @@ public class CalendarItem {
 				"\"" + this.MRN + "\":\"" + this.getMRN() + "\"," +
 				"\"" + this.KARTONS + "\":" + this.getKartons() + ',' +
 				"\"" + this.TITEL + "\":\"" + this.getKartons() + "\"," +
-				"\"" + this.UNITS + "\":" + 0 + ',' +
+				"\"" + this.UNITS + "\":" + this.getUnits() + ',' +
 				"\"" + this.BESCHIKBAAR + "\":" + this.getBeschikbaarOp() + ',' +
-				"\"" + this.GASMETING + "\":" + false + ',' +
-				"\"" + this.CATEGORIE + "\":" + "\"A\"" + ',' +
-				"\"" + this.OPMERKINGEN + "\":\"" + "Ik ben een container! Echt!" + "\"}";
+				"\"" + this.GASMETING + "\":" + this.getGasmeting() + ',' +
+				"\"" + this.CATEGORIE + "\":\"" + this.getCategorie() + "\"," +
+				"\"" + this.OPMERKINGEN + "\":\"" + this.getOpmerkingen() + "\"}";
 		
 		//String content = "{\"operatorid\":23,\"templatetype\":\"status\",\"typeid\":2,\"id\":7,\"allDay\":false,\"start\":1399970000,\"end\":1399973000,\"title\":\"HOI b\"}";
 
 		
 		return result;
+	}
+	
+	public boolean equals(CalendarItem e){
+		return (Hasher.hash(this.getBookingnr(), this.getContainernr()) == Hasher.hash(e.getBookingnr(), e.getContainernr()));
 	}
 	
 	public static void main(String[] args) throws Exception {
