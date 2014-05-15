@@ -11,13 +11,16 @@ import calendar.CalendarItem;
 public class Splitter {
 	private static String testString1 = "[{Dit is String 1},{Dit is String 2},{Dit is String, 3},{Dit is String 4}]";
 	private static httppusher pusher = new httppusher();
+	private static boolean printMode = true; //hiermee toggle je of de methode split() output moet leveren - kan helpen met debuggen
 	
 	public static void main(String[] args) {
+		long timeStart = System.currentTimeMillis();
 		ArrayList<CalendarItem> lijst = split(pusher.sendGet());
 		for (CalendarItem i:lijst) {
 			System.out.println(i);
 		}
-		
+		long time = System.currentTimeMillis() - timeStart;
+		System.out.println("Time elapsed: " + time + "ms");
 		
 	}
 	
@@ -39,12 +42,19 @@ public class Splitter {
 					if (value.charAt(0) == '"') {
 						value = value.substring(1, value.length()-1);
 					}
-					System.out.println(key + "                " + value);
+					if (printMode) {
+						String print = key + "                    ";
+						print = print.substring(0,21);
+						print+=value;
+						System.out.println(print);
+					}
 					
 					fields_t.put(key, value);
 				}	
 				result.add(makeCalendarItem(fields_t));
-			System.out.println();
+				if (printMode) {
+					System.out.println();
+				}
 			}
 		}
 		
