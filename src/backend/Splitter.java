@@ -62,7 +62,7 @@ public class Splitter {
 	}
 /**
  * @require DAT ALLE SHIT KLOPT YO
- * @ensure DAT ALLE SHIT HIERNA OOK KLOPT YO!!1
+ * @ensure DAT ALLE SHIT HIERNA MOGELIJK OOK KLOPT YO!!1
  */
 	private static CalendarItem makeCalendarItem(TreeMap<String, String> map) {
 		int bookingnr = Integer.parseInt(map.get(CalendarItem.BOOKINGNR));
