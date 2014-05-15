@@ -1,6 +1,16 @@
 package backend;
 
 public class Hasher {
+	public static final int NRRUNS = 100000; //aantal runs bij testen, moet kleiner blijven dan 300000
+	
+	public static void main(String[] args) {
+		long timeStart = System.currentTimeMillis();
+		for (int i = 0; i < NRRUNS; i++) {
+			long x = hash(123456+i,"CMDP 123456 7");
+		}
+		long time = System.currentTimeMillis() - timeStart;
+		System.out.println("Time taken for " + NRRUNS + " is: " + time + " ms.");
+	}
 	
 	/**
 	 * Levert een unieke long op op basis van een bookingnummer en een containernummer.
