@@ -20,13 +20,14 @@ public class Connector {
     ResultSet rs = null;
 
     Properties props = new Properties();
-    final String DBprops = "database.proprties";
+    private String DBprops;
 
     /**
      * Laad de properties (uses, db-naam en pw)
      * Test vervolgens de verbinding
      */
-    public Connector(){
+    public Connector(String properties){
+    	this.DBprops = properties;
     	this.loadProperties();
     	this.TestConnection();
     }
@@ -41,7 +42,7 @@ public class Connector {
             st = con.createStatement();
 
         } catch (SQLException ex) {
-            System.err.print(ex.getMessage());
+            System.err.print("error conncect: " + ex.getMessage());
             
         }
     }
@@ -105,6 +106,30 @@ public class Connector {
 		}
     	this.Close();
     	return result;
+    }
+    
+    public ResultSet query(String query){
+    	ResultSet result = null;
+    	this.Connect();
+    	try {
+    		rs = st.executeQuery(query);
+    		result = rs;
+    	} catch(SQLException e){
+    		System.err.println("Error query: " + e.getMessage());
+    	}
+    	//this.Close();
+    	return result;
+    }
+    
+    public void putQuery(String query){
+    	System.out.println(query);
+    	this.Connect();
+    	try {
+    		st.executeUpdate(query);
+    	} catch(SQLException e){
+    		System.err.println("Error putquery: " + e.getMessage());
+    	}
+    	this.Close();
     }
     
     /**
