@@ -18,27 +18,27 @@ public class CalendarItem {
 	private int bookingnr; //Booking
 	private int status;
 	
-	public final String OPERATORID = "operatorid";
-	public final String TEMPLATETYPE = "templatetype";
-	public final String TYPEID = "typeid";
-	public final String ID = "id";
-	public final String CALLS = "calls";
-	public final String ALLDAY = "allDay";
-	public final String START = "start";
-	public final String END = "end";
-	public final String BOOKINGNR = "bookingnr";
-	public final String CONTAINERNR = "containernr";
-	public final String MRN = "mrn";
-	public final String KARTONS = "kartons";
-	public final String UNITS = "units";
-	public final String BESCHIKBAAR= "beschikbaarop";
-	public final String GASMETING = "gasmeting";
-	public final String CATEGORIE = "categorie";
-	public final String OPMERKINGEN = "opmerkingen";
-	public final String TITEL = "title";
+	public static final String OPERATORID = "operatorid";
+	public static final String TEMPLATETYPE = "templatetype";
+	public static final String TYPEID = "typeid";
+	public static final String ID = "id";
+	public static final String CALLS = "calls";
+	public static final String ALLDAY = "allDay";
+	public static final String START = "start";
+	public static final String END = "end";
+	public static final String BOOKINGNR = "bookingnr";
+	public static final String CONTAINERNR = "containernr";
+	public static final String MRN = "mrn";
+	public static final String KARTONS = "kartons";
+	public static final String UNITS = "units";
+	public static final String BESCHIKBAAR= "beschikbaarop";
+	public static final String GASMETING = "gasmeting";
+	public static final String CATEGORIE = "categorie";
+	public static final String OPMERKINGEN = "opmerkingen";
+	public static final String TITEL = "title";
 	
-	public final String DBtemptype = "status";
-	public final int DBoperatorid = 23; 
+	public static final String DBtemptype = "status";
+	public static final int DBoperatorid = 23; 
 	
 	/**
 	 * 
