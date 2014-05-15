@@ -49,8 +49,8 @@ public class MongoConnector {
 	final String CATEGORIE = "categorie";
 	final String OPMERKINGEN = "opmerkingen";
 	
-	final String DBtemptype = "bitbv";
-	final int DBoperatorid = 4; 
+	final String DBtemptype = "status";
+	final int DBoperatorid = 23; 
 	
 	public MongoConnector(){
 		this.loadProperties();

@@ -1,5 +1,7 @@
 package calendar;
 
+import backend.httppusher;
+
 
 public class CalendarItem {
 	
@@ -16,6 +18,28 @@ public class CalendarItem {
 	String opmerkingen;
 	int bookingnr; //Booking
 	
+	final String OPERATORID = "operatorid";
+	final String TEMPLATETYPE = "templatetype";
+	final String TYPEID = "typeid";
+	final String ID = "id";
+	final String CALLS = "calls";
+	final String ALLDAY = "allDay";
+	final String START = "start";
+	final String END = "end";
+	final String BOOKINGNR = "bookingnr";
+	final String CONTAINERNR = "containernr";
+	final String MRN = "mrn";
+	final String KARTONS = "kartons";
+	final String UNITS = "units";
+	final String BESCHIKBAAR= "beschikbaarop";
+	final String GASMETING = "gasmeting";
+	final String CATEGORIE = "categorie";
+	final String OPMERKINGEN = "opmerkingen";
+	final String TITEL = "title";
+	
+	final String DBtemptype = "status";
+	final int DBoperatorid = 23; 
+	
 	/**
 	 * 
 	 * @param bookingnr
@@ -26,7 +50,7 @@ public class CalendarItem {
 	 */
 	public CalendarItem(int bookingnr, long start, String containernr, String mrn, int kartons){
 		this.bookingnr = bookingnr;
-		this.start = start;
+		this.start = start/1000;
 		this.containernr = containernr;
 		this.mrn = mrn; 
 		this.kartons = kartons;
@@ -34,7 +58,7 @@ public class CalendarItem {
 		this.units = 0;
 		this.gasmeting = false;
 		this.categorie = 'C';
-		this.beschikbaarop = this.start - 17280000;
+		this.beschikbaarop = this.start;
 		this.opmerkingen = "Test";
 	}
 	
@@ -47,7 +71,7 @@ public class CalendarItem {
 	}
 	
 	public long getEind(){
-		return start + 90000;
+		return start + 900;
 	}
 	
 	public String getContainernr(){
@@ -84,6 +108,39 @@ public class CalendarItem {
 	
 	public String toString(){
 		return "Container: "+ containernr + ", Boeking: " + bookingnr;
+	}
+	
+	public String toHTTPString(){
+		String result = "{\"" + this.OPERATORID + "\":" + this.DBoperatorid + ',' +
+				"\"" + this.TEMPLATETYPE + "\":\"" + this.DBtemptype + "\"," +
+				//"\"" + this.TYPEID + "\":" + 4 + ',' +
+				"\"" + this.ID + "\":" + this.getBookingnr() + ',' +
+				"\"" + this.CALLS + "\":\"" + this.getBookingnr() + "\"," +
+				"\"" + this.ALLDAY + "\":" + false + ',' +
+				"\"" + this.START + "\":" + this.getStart() + ',' +
+				"\"" + this.END + "\":" + this.getEind() + ',' +
+				"\"" + this.BOOKINGNR + "\":" + this.getBookingnr() + ',' +
+				"\"" + this.CONTAINERNR + "\":\"" + this.getContainernr() + "\"," +
+				"\"" + this.MRN + "\":\"" + this.getMRN() + "\"," +
+				"\"" + this.KARTONS + "\":" + this.getKartons() + ',' +
+				"\"" + this.TITEL + "\":\"" + this.getKartons() + "\"," +
+				"\"" + this.UNITS + "\":" + 0 + ',' +
+				"\"" + this.BESCHIKBAAR + "\":" + this.getBeschikbaarOp() + ',' +
+				"\"" + this.GASMETING + "\":" + false + ',' +
+				"\"" + this.CATEGORIE + "\":" + "\"A\"" + ',' +
+				"\"" + this.OPMERKINGEN + "\":\"" + "Ik ben een container! Echt!" + "\"}";
+		
+		//String content = "{\"operatorid\":23,\"templatetype\":\"status\",\"typeid\":2,\"id\":7,\"allDay\":false,\"start\":1399970000,\"end\":1399973000,\"title\":\"HOI b\"}";
+
+		
+		return result;
+	}
+	
+	public static void main(String[] args) throws Exception {
+		 
+		CalendarItem test = new CalendarItem(12, 13, "test", "test", 12);
+		System.out.println(test.toHTTPString());
+ 
 	}
 	
 	

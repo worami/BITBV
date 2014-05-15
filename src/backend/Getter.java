@@ -8,16 +8,19 @@ public class Getter {
 	
 	Connector connection;
 	MongoConnector mongo;
+	httppusher http;
 	
 	public Getter(){
 		connection = new Connector();
 		mongo = new MongoConnector();
+		http = new httppusher();
 	}
 	
 	public void synchronize(){
 		for(CalendarItem c : connection.getCalendarList()){
 			System.out.println(c.toString());
-			mongo.putCalendarItem(c);
+			//mongo.putCalendarItem(c);
+			http.sendPost(c);
 		}
 	}
 	

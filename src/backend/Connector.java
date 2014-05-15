@@ -94,7 +94,7 @@ public class Connector {
     	//List<String[]> bookings =  sql("SELECT 'Booking', 'Pickup', 'ContainerNumber', 'ImportDocNr', 'NumberColli' FROM 'modalitycontainerstatisticsinfocumm' WHERE 'Client' = 'TIMBAL'");
     	this.Connect();
     	try {
-			rs = st.executeQuery("SELECT `Booking`, `Pickup`, `ContainerNumber`, `ImportDocNr`, `NumberColli` FROM `modalitycontainerstatisticsinfocumm` WHERE `Client` = 'TIMBAL'");
+			rs = st.executeQuery("SELECT `Booking`, `Pickup`, `ContainerNumber`, `ImportDocNr`, `NumberColli` FROM `modalitycontainerstatisticsinfocumm` WHERE `Client` = 'TIMBAL' AND `Pickup` > 1398942018000");
 			//System.out.println("getCalendarList item " + rs.getInt(1));
 			while(rs.next()){
 				CalendarItem booking = new CalendarItem(rs.getInt(1), rs.getLong(2), rs.getString(3), rs.getString(4), rs.getInt(5));
