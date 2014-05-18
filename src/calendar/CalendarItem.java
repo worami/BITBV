@@ -58,10 +58,12 @@ public class CalendarItem {
 		this.kartons = kartons;
 		this.beschikbaarop = beschikbaarop;
 		
+		//initiele waarden
 		this.units = 0;
 		this.gasmeting = false;
 		this.categorie = 'C';
-		this.opmerkingen = "Test";
+		this.status = 0;
+		this.opmerkingen = "";
 	}
 	
 	/**
