@@ -50,17 +50,17 @@ public class CalendarItem {
 	 * @param mrn
 	 * @param kartons
 	 */
-	public CalendarItem(int bookingnr, long start, String containernr, String mrn, int kartons){
+	public CalendarItem(int bookingnr, long start, String containernr, String mrn, int kartons, long beschikbaarop){
 		this.bookingnr = bookingnr;
-		this.start = start/1000;
+		this.start = start;
 		this.containernr = containernr;
 		this.mrn = mrn; 
 		this.kartons = kartons;
+		this.beschikbaarop = beschikbaarop;
 		
 		this.units = 0;
 		this.gasmeting = false;
 		this.categorie = 'C';
-		this.beschikbaarop = this.start;
 		this.opmerkingen = "Test";
 	}
 	
@@ -185,12 +185,12 @@ public class CalendarItem {
 	}
 	
 	public String toString(){
-		return "Container: "+ containernr + ", Boeking: " + bookingnr;
+		return "Container: "+ containernr + ", Boeking: " + bookingnr + " BeschikbaarOp: " + beschikbaarop;
 	}
 	
 	public String toHTTPString(){
 		SimpleDateFormat sdf = new SimpleDateFormat("EEE d MMM yyyy 'om' HH:mm");
-		String date = "\"" + sdf.format(this.getBeschikbaarOp()) + "\"";
+		String date = "\"" + sdf.format(this.getBeschikbaarOp()*1000) + "\"";
 		
 		String result = "{\"" + this.OPERATORID + "\":" + this.DBoperatorid + ',' +
 				"\"" + this.TEMPLATETYPE + "\":\"" + this.DBtemptype + "\"," +
@@ -223,7 +223,7 @@ public class CalendarItem {
 	
 	public static void main(String[] args) throws Exception {
 		 
-		CalendarItem test = new CalendarItem(12, 13, "test", "test", 12);
+		CalendarItem test = new CalendarItem(12, 13, "test", "test", 12, 12);
 		System.out.println(test.toHTTPString());
  
 	}
