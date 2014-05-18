@@ -1,0 +1,67 @@
+package dbconnections;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import calendar.CalendarItem;
+
+public class InsightConnector extends Connector {
+	
+	public InsightConnector(String properties) {
+		super(properties);
+	}
+	
+	public List<CalendarItem> getCalendarList(){
+    	List<CalendarItem> result = new ArrayList<CalendarItem>();
+    	this.Connect();
+    	try {
+			rs = st.executeQuery("SELECT "
+					+ "`Booking`, "
+					+ "`Pickup`, "
+					+ "`ContainerNumber`, "
+					+ "`ImportDocNr`, "
+					+ "`NumberColli` "
+					+ "FROM  " + this.getTabel() + " "
+					+ "WHERE `Client` = 'TIMBAL' AND `Pickup` = 1398942018000");
+			while(rs.next()){
+				CalendarItem booking = new CalendarItem(
+						rs.getInt(1), 
+						rs.getLong(2)/1000, 
+						rs.getString(3), 
+						rs.getString(4), 
+						rs.getInt(5), 0);
+				result.add(booking);
+			}
+		} catch (SQLException e) {
+			System.err.println("Error getCalendarList: " + e.getMessage());
+		}
+    	this.Close();
+    	return result;
+    }
+	
+	public long[] getETAinfo(CalendarItem item){
+		long[] result = new long[3];
+		this.Connect();
+    	try {
+			rs =st.executeQuery("SELECT "
+					+ "arrivalPickup, "
+					+ "gateOut, "
+					+ "importGateInPickup "
+					+ "FROM " + getTabel() + " "
+					+ "WHERE `Client` = 'TIMBAL' "
+					+ "AND `Booking' = " + item.getBookingnr() 
+					+ " AND ContainerNumber = " + item.getContainernr());
+			if(rs.next()){
+				result[0] = rs.getLong(1);
+				result[1] = rs.getLong(2);
+				result[2] = rs.getLong(3);
+ 			}
+		} catch (SQLException e) {
+			System.err.println("Error getETAinfo: " + e.getMessage());
+		}
+    	this.Close();
+		return result;
+	}
+
+}
