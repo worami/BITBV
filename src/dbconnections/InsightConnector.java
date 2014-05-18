@@ -29,7 +29,7 @@ public class InsightConnector extends Connector {
 					+ "`ImportDocNr`, "
 					+ "`NumberColli` "
 					+ "FROM  " + this.getTabel() + " "
-					+ "WHERE `Client` = 'TIMBAL' AND `Pickup` = " + this.vanaf);
+					+ "WHERE `Client` = 'TIMBAL' AND `Pickup` > " + this.vanaf);
 			while(rs.next()){
 				CalendarItem booking = new CalendarItem(
 						rs.getInt(1), 
@@ -61,8 +61,8 @@ public class InsightConnector extends Connector {
 					+ "importGateInPickup "
 					+ "FROM " + getTabel() + " "
 					+ "WHERE `Client` = 'TIMBAL' "
-					+ "AND `Booking' = " + item.getBookingnr() 
-					+ " AND ContainerNumber = " + item.getContainernr());
+					+ "AND Booking = " + item.getBookingnr() 
+					+ " AND ContainerNumber = \"" + item.getContainernr() + "\"");
 			if(rs.next()){
 				result[0] = rs.getLong(1);
 				result[1] = rs.getLong(2);

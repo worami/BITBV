@@ -25,7 +25,8 @@ public class OwnConnector extends Connector {
 					+ "gasmeting, "
 					+ "categorie, "
 					+ "status, "
-					+ "opmerkingen "
+					+ "opmerkingen, "
+					+ "mongoid "
 					+ "FROM "  + this.getTabel()
 					+ " WHERE hashkey = " + Hasher.hash(item.getBookingnr(), item.getContainernr()));
 			if(rs.next()){
@@ -35,6 +36,7 @@ public class OwnConnector extends Connector {
 				item.setCategorie(rs.getString(5).toCharArray()[0]);
 				item.setStatus(rs.getInt(6));
 				item.setOpmerkingen(rs.getString(7));
+				item.setMondoID(rs.getString(8));
 			}
 		} catch (SQLException e) {
 			System.err.println("error ownconnection getcalendardate: " + e.getMessage());
@@ -61,7 +63,7 @@ public class OwnConnector extends Connector {
 	private void newCalendarItem(CalendarItem item){
 		this.Connect();
 		try {
-			st.executeUpdate("INSERT INTO " + this.getTabel() + " (hashkey, planned, eta, units, gasmeting, categorie, status, opmerkingen) VALUES (" + 
+			st.executeUpdate("INSERT INTO " + this.getTabel() + " (hashkey, planned, eta, units, gasmeting, categorie, status, opmerkingen, mongoid) VALUES (" + 
 					Hasher.hash(item.getBookingnr(), item.getContainernr()) + ", " +
 					item.getStart() + ", " +
 					item.getBeschikbaarOp() + ", " +
@@ -69,7 +71,8 @@ public class OwnConnector extends Connector {
 					item.getGasmeting() + ", " +
 					"\""+ item.getCategorie() + "\", " +
 					item.getStatus() + ", " +
-					"\"" + item.getOpmerkingen() + "\")");
+					"\"" + item.getOpmerkingen() + "\", " +
+					"\"" + item.getMondoID() + "\")");
 		} catch (SQLException e) {
 			System.err.println("error ownconnector newCalendarItem: " + e.getMessage());
 		}
@@ -91,6 +94,7 @@ public class OwnConnector extends Connector {
 					", categorie = \"" + item.getCategorie() +
 					"\", status = " + item.getStatus() + 
 					", opmerkingen = \"" + item.getOpmerkingen() + 
+					"\", mongoid = \"" + item.getMondoID() +
 					"\" WHERE hashkey = " + Hasher.hash(item.getBookingnr(), item.getContainernr()));
 		} catch (SQLException e) {
 			System.err.println("error ownConnector updateCalendarItem: " + e.getMessage());

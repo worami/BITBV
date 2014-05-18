@@ -3,8 +3,6 @@ package calendar;
 import java.text.SimpleDateFormat;
 
 import backend.Hasher;
-import backend.httppusher;
-
 
 public class CalendarItem {
 	
@@ -19,6 +17,7 @@ public class CalendarItem {
 	private String opmerkingen;
 	private int bookingnr; //Booking
 	private int status;
+	private String mongoid;
 	
 	public static final String OPERATORID = "operatorid";
 	public static final String TEMPLATETYPE = "templatetype";
@@ -38,6 +37,7 @@ public class CalendarItem {
 	public static final String CATEGORIE = "categorie";
 	public static final String OPMERKINGEN = "opmerkingen";
 	public static final String TITEL = "title";
+	public static final String MONGOID = "_id";
 	
 	public static final String DBtemptype = "status";
 	public static final int DBoperatorid = 23; 
@@ -64,6 +64,7 @@ public class CalendarItem {
 		this.categorie = 'C';
 		this.status = 0;
 		this.opmerkingen = "";
+		this.mongoid = "";
 	}
 	
 	/**
@@ -80,7 +81,7 @@ public class CalendarItem {
 	 * @param status
 	 * @param opmerkingen
 	 */
-	public CalendarItem(int bookingnr, long start, String containernr, String mrn, int kartons, int units, long ETA, boolean gasmeting, char categorie, int status, String opmerkingen){
+	public CalendarItem(int bookingnr, long start, String containernr, String mrn, int kartons, int units, long ETA, boolean gasmeting, char categorie, int status, String opmerkingen, String mongoid){
 		this.bookingnr = bookingnr;
 		this.start = start;
 		this.containernr = containernr;
@@ -92,6 +93,7 @@ public class CalendarItem {
 		this.categorie = categorie;
 		this.status = status;
 		this.opmerkingen = opmerkingen;
+		this.mongoid = mongoid;
 	}
 	
 	public int getBookingnr(){
@@ -142,6 +144,10 @@ public class CalendarItem {
 		return status;
 	}
 	
+	public String getMondoID(){
+		return this.mongoid;
+	}
+	
 	public void setBookingnr(int bookingnr){
 		this.bookingnr = bookingnr;
 	}
@@ -186,36 +192,54 @@ public class CalendarItem {
 		this.status = status;
 	}
 	
+	public void setMondoID(String id){
+		this.mongoid = id;
+	}
+	
 	public String toString(){
-		return "Container: "+ containernr + ", Boeking: " + bookingnr + " BeschikbaarOp: " + beschikbaarop;
+		return "Container: "+ this.getContainernr() + '\n'
+				+ "Boekingnr: " + this.getBookingnr() + '\n'
+				+ CalendarItem.TYPEID + ": " + this.getStatus() + '\n'
+				+ CalendarItem.CALLS + ": " + this.getBookingnr() + '\n'
+				+ CalendarItem.ALLDAY + ": " + false + '\n'
+				+ CalendarItem.START + ": " + this.getStart() + '\n'
+				+ CalendarItem.END + ": " + this.getEind() + '\n'
+				+ CalendarItem.BOOKINGNR + ": " + this.getBookingnr() + '\n'
+				+ CalendarItem.CONTAINERNR + ": " + this.getContainernr() + '\n'
+				+ CalendarItem.MRN + ": " + this.getMRN() + '\n'
+				+ CalendarItem.KARTONS + ": " + this.getKartons() + '\n'
+				+ CalendarItem.TITEL + ": " + this.getKartons() + '\n'
+				+ CalendarItem.UNITS + ": " + this.getUnits() + '\n'
+				+ CalendarItem.BESCHIKBAAR + ": " + this.beschikbaarop + '\n'
+				+ CalendarItem.GASMETING + ": " + this.getGasmeting() + '\n'
+				+ CalendarItem.CATEGORIE + ": " + this.getCategorie() + '\n'
+				+ CalendarItem.OPMERKINGEN + ": " + this.getOpmerkingen();
 	}
 	
 	public String toHTTPString(){
 		SimpleDateFormat sdf = new SimpleDateFormat("EEE d MMM yyyy 'om' HH:mm");
 		String date = "\"" + sdf.format(this.getBeschikbaarOp()*1000) + "\"";
 		
-		String result = "{\"" + this.OPERATORID + "\":" + this.DBoperatorid + ',' +
-				"\"" + this.TEMPLATETYPE + "\":\"" + this.DBtemptype + "\"," +
-				"\"" + this.TYPEID + "\":" + this.getStatus() + ',' +
-				"\"" + this.ID + "\":" + Hasher.hash(this.getBookingnr(), this.getContainernr()) + ',' +
-				"\"" + this.CALLS + "\":\"" + this.getBookingnr() + "\"," +
-				"\"" + this.ALLDAY + "\":" + false + ',' +
-				"\"" + this.START + "\":" + this.getStart() + ',' +
-				"\"" + this.END + "\":" + this.getEind() + ',' +
-				"\"" + this.BOOKINGNR + "\":" + this.getBookingnr() + ',' +
-				"\"" + this.CONTAINERNR + "\":\"" + this.getContainernr() + "\"," +
-				"\"" + this.MRN + "\":\"" + this.getMRN() + "\"," +
-				"\"" + this.KARTONS + "\":" + this.getKartons() + ',' +
-				"\"" + this.TITEL + "\":\"" + this.getKartons() + "\"," +
-				"\"" + this.UNITS + "\":" + this.getUnits() + ',' +
-				"\"" + this.BESCHIKBAAR + "\":" + date + ',' +
-				"\"" + this.GASMETING + "\":" + this.getGasmeting() + ',' +
-				"\"" + this.CATEGORIE + "\":\"" + this.getCategorie() + "\"," +
-				"\"" + this.OPMERKINGEN + "\":\"" + this.getOpmerkingen() + "\"}";
-		
-		//String content = "{\"operatorid\":23,\"templatetype\":\"status\",\"typeid\":2,\"id\":7,\"allDay\":false,\"start\":1399970000,\"end\":1399973000,\"title\":\"HOI b\"}";
-
-		
+		//Resulteerd in een string zoals: "{\"operatorid\":23,\"templatetype\":\"status\",\"typeid\":2,
+		//\"id\":7,\"allDay\":false,\"start\":1399970000,\"end\":1399973000,\"title\":\"HOI b\"}";
+		String result = "{\"" + CalendarItem.OPERATORID + "\":" + CalendarItem.DBoperatorid + ',' +
+				"\"" + CalendarItem.TEMPLATETYPE + "\":\"" + CalendarItem.DBtemptype + "\"," +
+				"\"" + CalendarItem.TYPEID + "\":" + this.getStatus() + ',' +
+				"\"" + CalendarItem.ID + "\":" + Hasher.hash(this.getBookingnr(), this.getContainernr()) + ',' +
+				"\"" + CalendarItem.CALLS + "\":\"" + this.getBookingnr() + "\"," +
+				"\"" + CalendarItem.ALLDAY + "\":" + false + ',' +
+				"\"" + CalendarItem.START + "\":" + this.getStart() + ',' +
+				"\"" + CalendarItem.END + "\":" + this.getEind() + ',' +
+				"\"" + CalendarItem.BOOKINGNR + "\":" + this.getBookingnr() + ',' +
+				"\"" + CalendarItem.CONTAINERNR + "\":\"" + this.getContainernr() + "\"," +
+				"\"" + CalendarItem.MRN + "\":\"" + this.getMRN() + "\"," +
+				"\"" + CalendarItem.KARTONS + "\":" + this.getKartons() + ',' +
+				"\"" + CalendarItem.TITEL + "\":\"" + this.getKartons() + "\"," +
+				"\"" + CalendarItem.UNITS + "\":" + this.getUnits() + ',' +
+				"\"" + CalendarItem.BESCHIKBAAR + "\":" + date + ',' +
+				"\"" + CalendarItem.GASMETING + "\":" + this.getGasmeting() + ',' +
+				"\"" + CalendarItem.CATEGORIE + "\":\"" + this.getCategorie() + "\"," +
+				"\"" + CalendarItem.OPMERKINGEN + "\":\"" + this.getOpmerkingen() + "\"}";
 		return result;
 	}
 	

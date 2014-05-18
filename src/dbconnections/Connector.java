@@ -20,7 +20,6 @@ public class Connector {
     ResultSet rs = null;
 
     Properties props = new Properties();
-    private String DBprops;
     
     String tabel;
 
@@ -29,8 +28,7 @@ public class Connector {
      * Test vervolgens de verbinding
      */
     public Connector(String properties){
-    	this.DBprops = properties;
-    	this.loadProperties();
+    	this.loadProperties(properties);
     	this.tabel = props.getProperty("db.tabel");
     	this.TestConnection();
     }
@@ -70,9 +68,9 @@ public class Connector {
     /**
      * Laad de connectie eigenschappen uit een properties bestand
      */
-    private void loadProperties(){
+    private void loadProperties(String prop){
     	try {
-    		FileInputStream in = new FileInputStream(DBprops);
+    		FileInputStream in = new FileInputStream(prop);
             props.load(in);
 
         } catch (FileNotFoundException ex) {
@@ -81,7 +79,6 @@ public class Connector {
         } catch (IOException e){
         	System.err.println(e.getMessage());
         }
-    	
     }
     
     /**

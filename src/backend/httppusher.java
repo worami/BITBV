@@ -28,9 +28,10 @@ public class httppusher {
 	final String DBtemptype = "status";
 	final int DBoperatorid = 23; 
 	
-	private Properties properties;
+	private Properties httpprops;
 	
 	public httppusher(String propertiesFile){
+		httpprops = new Properties();
 		this.loadProperties(propertiesFile);
 	}
  
@@ -54,7 +55,7 @@ public class httppusher {
 			BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 			result = rd.readLine();
 		} catch (IOException e) {
-			System.out.println("error: http get");
+			System.err.println("error: http get " + e.getMessage());
 		}
  
 		return result;
@@ -65,9 +66,9 @@ public class httppusher {
 	 * @param id
 	 * @return
 	 */
-	public CalendarItem sendGet(String id){
+	public CalendarItem sendGet(CalendarItem item){
 		HttpClient client = HttpClientBuilder.create().build();
-		HttpGet get = new HttpGet(url + '/' + id);
+		HttpGet get = new HttpGet(url + '/' + item.getMondoID());
 		
 		// add request header
 		get.setHeader("X-Auth-Token", token);
@@ -80,7 +81,7 @@ public class httppusher {
 			ArrayList<CalendarItem> lijst = Splitter.split(rd.readLine());
 			result = (lijst.size() > 0) ? lijst.get(0) : null;
 		} catch (IOException e) {
-			System.out.println("error: http get");
+			System.err.println("error: http get " + e.getMessage());
 		}
 		return result;
 	}
@@ -117,9 +118,9 @@ public class httppusher {
 	 * Verwijder een object met een bepaald id uit de applicatie
 	 * @param id
 	 */
-	public void sendDelete(String id) {
+	public void sendDelete(CalendarItem item) {
 		HttpClient client = HttpClientBuilder.create().build();
-		HttpDelete del = new HttpDelete(url + '/' + id);
+		HttpDelete del = new HttpDelete(url + '/' + item.getMondoID());
 		
 		// add request header
 		del.setHeader("X-Auth-Token", token);
@@ -135,16 +136,18 @@ public class httppusher {
 	 * Send een update over http
 	 * @param id
 	 */
-	public void sendUpdate(String id) {
+	public void sendUpdate(CalendarItem item) {
 		HttpClient client = HttpClientBuilder.create().build();
-		HttpPut put = new HttpPut(url + '/' + id);
+		HttpPut put = new HttpPut(url + '/' + item.getMondoID());
 		
 		// add request header
 		put.setHeader("X-Auth-Token", token);
  
 		StringEntity se;
 		try {
-			se = new StringEntity("{\"$set\":{\"opmerkingen\":\"Geupdate door pusher!\"}}");
+			String updateQuery = "{\"$set\":" + item.toHTTPString() + "}";
+			//String updateQuery = "{\"$set\":{\"typeid\":1}}";
+			se = new StringEntity(updateQuery);
 			put.setEntity(se);
 			client.execute(put);
 		} catch (IOException e) {
@@ -152,30 +155,32 @@ public class httppusher {
 		}
 	}
 	
-	private void loadProperties(String file){
+	/**
+     * Laad de connectie eigenschappen uit een properties bestand
+     */
+    private void loadProperties(String prop){
     	try {
-    		FileInputStream in = new FileInputStream(file);
-            properties.load(in);
-            token = properties.getProperty("http.token");
-            url = properties.getProperty("http.url");
+    		FileInputStream in = new FileInputStream(prop);
+            httpprops.load(in);
+            token = httpprops.getProperty("http.token");
+            url = httpprops.getProperty("http.url");
         } catch (FileNotFoundException ex) {
             System.err.println(ex.getMessage());
 
         } catch (IOException e){
         	System.err.println(e.getMessage());
         }
-    	
     }
 	
 	public static void main(String[] args) throws Exception {
 		 
-		httppusher http = new httppusher("database.properties");
+		httppusher http = new httppusher("database.proprties");
  
 		//System.out.println("Testing 1 - Send Http GET request");
-		//System.out.println(http.sendGet());
+		System.out.println(http.sendGet());
 		//http.sendDelete("MLzTkF9EBLjk4br8A");
 		//http.sendUpdate("gZ6WjM4TyjfEkGYw7");
-		System.out.println(http.sendGet("gZ6WjM4TyjfEkGYw7").toString());
+		//System.out.println(http.sendGet("gZ6WjM4TyjfEkGYw7").toString());
 		//http.sendGet();
 		//System.out.println("\nTesting 2 - Send Http POST request");
 		//http.sendPost();

@@ -14,7 +14,7 @@ public class Getter {
 	
 	public Getter(){
 		insight = new InsightConnector("database.proprties");
-		http = new httppusher("database.properties");
+		http = new httppusher("database.proprties");
 		own = new OwnConnector("own.proprties");
 	}
 	
@@ -38,16 +38,33 @@ public class Getter {
 	}
 	
 	private void updateETA(){
-		for(CalendarItem item : this.getCompleteCalendarList()){
-			if(item.getBeschikbaarOp() < item.getStart()){
+		for(CalendarItem item : this.getCompleteCalendarList()){	
+			if(item.getBeschikbaarOp() > item.getStart()){
 				item.setStatus(2);
+				own.putCalendarItem(item);
+				http.sendUpdate(item);
+			} else {
+				System.out.println(item.getBeschikbaarOp() + " " + item.getStart());
 			}
 		}
 	}
 	
+	/**
+	 * Push alle calendarItems naar de applicatie
+	 * Er kunnen nieuwe tussen zitten
+	 */
 	private void pushNaarApplicatie(){
 		for(CalendarItem item : this.getCompleteCalendarList()){
 			http.sendPost(item);
+		}
+	}
+	
+	/** 
+	 * Verwijder al onze (Temptype status en typeid 23) calendaritems uit de applicatie
+	 */
+	public void leegApplicatie(){
+		for(CalendarItem item : this.getCompleteCalendarList()){
+			http.sendDelete(item);
 		}
 	}
 		
@@ -76,6 +93,7 @@ public class Getter {
 	public static void main(String[] args) {
 		Getter get = new Getter();
 		get.synchronize();
+		//get.leegApplicatie();
 	}
 
 }

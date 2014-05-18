@@ -10,8 +10,8 @@ import calendar.CalendarItem;
  */
 public class Splitter {
 	private static String testString1 = "[{Dit is String 1},{Dit is String 2},{Dit is String, 3},{Dit is String 4}]";
-	private static httppusher pusher = new httppusher("database.properties");
-	private static boolean printMode = true; //hiermee toggle je of de methode split() output moet leveren - kan helpen met debuggen
+	private static httppusher pusher = new httppusher("database.proprties");
+	private static boolean printMode = false; //hiermee toggle je of de methode split() output moet leveren - kan helpen met debuggen
 	
 	public static void main(String[] args) {
 		long timeStart = System.currentTimeMillis();
@@ -26,7 +26,7 @@ public class Splitter {
 	
 	public static ArrayList<CalendarItem> split(String str) {
 		ArrayList<CalendarItem> result = new ArrayList<CalendarItem>();
-		str = str.substring(2, str.length()-2);
+		str = str.length() > 2 ? str.substring(2, str.length()-2) : "";
 		
 		Scanner scanner = new Scanner(str).useDelimiter("\\},\\{");
 		while(scanner.hasNext()) {
@@ -71,7 +71,7 @@ public class Splitter {
 		String mrn = map.get(CalendarItem.MRN);
 		int kartons = Integer.parseInt(map.get(CalendarItem.KARTONS));
 		int units = Integer.parseInt(map.get(CalendarItem.UNITS));
-		long beschikbaarop = 0;
+		long beschikbaarop = 0; //De beschikbaar op wordt later aangepast
 		//long beschikbaarop = Long.parseLong(map.get(CalendarItem.BESCHIKBAAR));
 		boolean gasmeting = Boolean.parseBoolean(map.get(CalendarItem.GASMETING));
 		char categorie = map.get(CalendarItem.CATEGORIE).charAt(0);
@@ -80,9 +80,11 @@ public class Splitter {
 		try {
 			status = Integer.parseInt(map.get(CalendarItem.TYPEID));
 		} catch (NumberFormatException e) {
+			System.err.println("fout in status (Splitter makeCalendarItem): " + e.getMessage());
 		}
 		String opmerkingen = map.get(CalendarItem.OPMERKINGEN);
+		String mongoid = map.get(CalendarItem.MONGOID);
 		
-		return new CalendarItem(bookingnr, start, containernr, mrn, kartons, units, beschikbaarop, gasmeting, categorie, status, opmerkingen);
+		return new CalendarItem(bookingnr, start, containernr, mrn, kartons, units, beschikbaarop, gasmeting, categorie, status, opmerkingen, mongoid);
 	}
 }
