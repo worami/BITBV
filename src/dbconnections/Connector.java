@@ -68,66 +68,6 @@ public class Connector {
     }
     
     /**
-     * Maakt een connectie, voert de query uit en sluit de connectie vervolgens weer
-     * @param SQL query
-     * @return een List<String[]> met het resultaat van de query
-     */
-    public List<String[]> sqlGet(String query){
-    	List<String[]> result = new ArrayList<String[]>();
-    	this.Connect();
-    	try {
-			rs = st.executeQuery(query);
-			while(rs.next()){
-				String s = "";
-				int length = rs.getMetaData().getColumnCount();
-				String[] r = new String[length];
-				for(int i = 1; length >= i; i++){
-					r[i-1] = rs.getString(i);
-				}
-				result.add(r);
-			}
-		} catch (SQLException e) {
-			System.err.println(e.getMessage());
-		}
-    	this.Close();
-    	return result;
-    }
-    
-    public void sqlEdit(String query){
-    	this.Connect();
-    	try {
-    		st.executeUpdate(query);
-		} catch (SQLException e) {
-			System.err.println(e.getMessage());
-		}
-    	this.Close();
-    }
-    
-    public ResultSet query(String SQLquery){
-    	ResultSet result = null;
-    	this.Connect();
-    	try {
-    		rs = st.executeQuery(SQLquery);
-    		result = rs;
-    	} catch(SQLException e){
-    		System.err.println("Error query: " + e.getMessage());
-    	}
-    	//this.Close();
-    	return result;
-    }
-    
-    public void putQuery(String query){
-    	System.out.println(query);
-    	this.Connect();
-    	try {
-    		st.executeUpdate(query);
-    	} catch(SQLException e){
-    		System.err.println("Error putquery: " + e.getMessage());
-    	}
-    	this.Close();
-    }
-    
-    /**
      * Laad de connectie eigenschappen uit een properties bestand
      */
     private void loadProperties(){
