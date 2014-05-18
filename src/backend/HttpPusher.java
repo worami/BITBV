@@ -20,7 +20,7 @@ import org.apache.http.entity.StringEntity;
 
 import calendar.CalendarItem;
  
-public class httppusher {
+public class HttpPusher {
  
 	private String url;
 	private String token;
@@ -30,7 +30,7 @@ public class httppusher {
 	
 	private Properties httpprops;
 	
-	public httppusher(String propertiesFile){
+	public HttpPusher(String propertiesFile){
 		httpprops = new Properties();
 		this.loadProperties(propertiesFile);
 	}
@@ -174,7 +174,7 @@ public class httppusher {
 	
 	public static void main(String[] args) throws Exception {
 		 
-		httppusher http = new httppusher("database.proprties");
+		HttpPusher http = new HttpPusher("database.proprties");
  
 		//System.out.println("Testing 1 - Send Http GET request");
 		System.out.println(http.sendGet());

@@ -10,7 +10,7 @@ import calendar.CalendarItem;
  */
 public class Splitter {
 	private static String testString1 = "[{Dit is String 1},{Dit is String 2},{Dit is String, 3},{Dit is String 4}]";
-	private static httppusher pusher = new httppusher("database.proprties");
+	private static HttpPusher pusher = new HttpPusher("database.proprties");
 	private static boolean printMode = false; //hiermee toggle je of de methode split() output moet leveren - kan helpen met debuggen
 	
 	public static void main(String[] args) {

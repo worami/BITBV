@@ -10,11 +10,11 @@ public class Getter {
 	
 	InsightConnector insight;
 	OwnConnector own;
-	httppusher http;
+	HttpPusher http;
 	
 	public Getter(){
 		insight = new InsightConnector("database.proprties");
-		http = new httppusher("database.proprties");
+		http = new HttpPusher("database.proprties");
 		own = new OwnConnector("own.proprties");
 	}
 	
