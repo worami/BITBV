@@ -66,10 +66,10 @@ public class Connector {
     
     /**
      * Maakt een connectie, voert de query uit en sluit de connectie vervolgens weer
-     * @param query
+     * @param SQL query
      * @return een List<String[]> met het resultaat van de query
      */
-    public List<String[]> sql(String query){
+    public List<String[]> sqlGet(String query){
     	List<String[]> result = new ArrayList<String[]>();
     	this.Connect();
     	try {
@@ -90,6 +90,17 @@ public class Connector {
     	return result;
     }
     
+    public void sqlEdit(String query){
+    	this.Connect();
+    	try {
+    		st.executeUpdate(query);
+		} catch (SQLException e) {
+			System.err.println(e.getMessage());
+		}
+    	this.Close();
+    }
+    
+    /**
     public List<CalendarItem> getCalendarList(){
     	List<CalendarItem> result = new ArrayList<CalendarItem>();
     	//List<String[]> bookings =  sql("SELECT 'Booking', 'Pickup', 'ContainerNumber', 'ImportDocNr', 'NumberColli' FROM 'modalitycontainerstatisticsinfocumm' WHERE 'Client' = 'TIMBAL'");
@@ -98,7 +109,7 @@ public class Connector {
 			rs = st.executeQuery("SELECT `Booking`, `Pickup`, `ContainerNumber`, `ImportDocNr`, `NumberColli` FROM `modalitycontainerstatisticsinfocumm` WHERE `Client` = 'TIMBAL' AND `Pickup` > 1398942018000");
 			//System.out.println("getCalendarList item " + rs.getInt(1));
 			while(rs.next()){
-				CalendarItem booking = new CalendarItem(rs.getInt(1), rs.getLong(2), rs.getString(3), rs.getString(4), rs.getInt(5));
+				CalendarItem booking = new CalendarItem(rs.getInt(1), rs.getLong(2)/1000, rs.getString(3), rs.getString(4), rs.getInt(5), 0);
 				result.add(booking);
 			}
 		} catch (SQLException e) {
@@ -106,7 +117,7 @@ public class Connector {
 		}
     	this.Close();
     	return result;
-    }
+    }**/
     
     public ResultSet query(String query){
     	ResultSet result = null;
