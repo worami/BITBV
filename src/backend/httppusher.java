@@ -1,6 +1,8 @@
 package backend;
  
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -20,8 +22,8 @@ import calendar.CalendarItem;
  
 public class httppusher {
  
-	final String URL = "http://insight.exomodal.com:80/collectionapi/calendar_items";
-	final String TOKEN = "9900aa";
+	private String url;
+	private String token;
 	
 	final String DBtemptype = "status";
 	final int DBoperatorid = 23; 
@@ -29,7 +31,7 @@ public class httppusher {
 	private Properties properties;
 	
 	public httppusher(String propertiesFile){
-		//this.properties = p;
+		this.loadProperties(propertiesFile);
 	}
  
 	/**
@@ -38,10 +40,10 @@ public class httppusher {
 	 */
 	public String sendGet() {
 		HttpClient client = HttpClientBuilder.create().build();
-		HttpGet request = new HttpGet(URL);
+		HttpGet request = new HttpGet(url);
 		
 		// add request header
-		request.setHeader("X-Auth-Token", TOKEN);
+		request.setHeader("X-Auth-Token", token);
  
 		HttpResponse response;
 
@@ -58,12 +60,17 @@ public class httppusher {
 		return result;
 	}
 	
+	/**
+	 * Vraag een object op aan de applicatie
+	 * @param id
+	 * @return
+	 */
 	public CalendarItem sendGet(String id){
 		HttpClient client = HttpClientBuilder.create().build();
-		HttpGet get = new HttpGet(URL + '/' + id);
+		HttpGet get = new HttpGet(url + '/' + id);
 		
 		// add request header
-		get.setHeader("X-Auth-Token", TOKEN);
+		get.setHeader("X-Auth-Token", token);
  
 		HttpResponse response;
 		CalendarItem result = null;
@@ -78,13 +85,16 @@ public class httppusher {
 		return result;
 	}
  
-	// HTTP POST request
+	/**
+	 * Stuur een nieuw object naar de applicatie
+	 * @param item
+	 */
 	public void sendPost(CalendarItem item){
 		HttpClient client = HttpClientBuilder.create().build();
-		HttpPost post = new HttpPost(URL);
+		HttpPost post = new HttpPost(url);
  
 		// add header
-		post.setHeader("X-Auth-Token", TOKEN);
+		post.setHeader("X-Auth-Token", token);
 
 		//String test = "{\"operatorid\":23,\"templatetype\":\"status\",\"typeid\":2,\"id\":7,\"allDay\":false,\"start\":1399970000,\"end\":1399973000,\"title\":\"HOI blala\"}";
 		StringEntity se;
@@ -93,9 +103,9 @@ public class httppusher {
 		    post.setEntity(se);
 		    client.execute(post);
 		} catch (UnsupportedEncodingException e) {
-			System.err.println("error: sendPost 1");
+			System.err.println("error: httppusher sendPost 1");
 		} catch (IOException e) {
-			System.err.println("error: sendPost 2");
+			System.err.println("error: httppusher sendPost 2");
 		} 
 	}
 	
@@ -103,26 +113,34 @@ public class httppusher {
 		
 	}
 	
+	/**
+	 * Verwijder een object met een bepaald id uit de applicatie
+	 * @param id
+	 */
 	public void sendDelete(String id) {
 		HttpClient client = HttpClientBuilder.create().build();
-		HttpDelete del = new HttpDelete(URL + '/' + id);
+		HttpDelete del = new HttpDelete(url + '/' + id);
 		
 		// add request header
-		del.setHeader("X-Auth-Token", TOKEN);
+		del.setHeader("X-Auth-Token", token);
  
 		try {
 			client.execute(del);
 		} catch (IOException e) {
-			System.err.println("error: http del" + e.getMessage());
+			System.err.println("error: http del " + e.getMessage());
 		}
 	}
 	
+	/**
+	 * Send een update over http
+	 * @param id
+	 */
 	public void sendUpdate(String id) {
 		HttpClient client = HttpClientBuilder.create().build();
-		HttpPut put = new HttpPut(URL + '/' + id);
+		HttpPut put = new HttpPut(url + '/' + id);
 		
 		// add request header
-		put.setHeader("X-Auth-Token", TOKEN);
+		put.setHeader("X-Auth-Token", token);
  
 		StringEntity se;
 		try {
@@ -130,9 +148,24 @@ public class httppusher {
 			put.setEntity(se);
 			client.execute(put);
 		} catch (IOException e) {
-			System.err.println("error: http del" + e.getMessage());
+			System.err.println("error: http update " + e.getMessage());
 		}
 	}
+	
+	private void loadProperties(String file){
+    	try {
+    		FileInputStream in = new FileInputStream(file);
+            properties.load(in);
+            token = properties.getProperty("http.token");
+            url = properties.getProperty("http.url");
+        } catch (FileNotFoundException ex) {
+            System.err.println(ex.getMessage());
+
+        } catch (IOException e){
+        	System.err.println(e.getMessage());
+        }
+    	
+    }
 	
 	public static void main(String[] args) throws Exception {
 		 
