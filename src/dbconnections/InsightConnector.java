@@ -8,10 +8,16 @@ import calendar.CalendarItem;
 
 public class InsightConnector extends Connector {
 	
+	final String vanaf = "1398942018000"; //Datum vanaf waar de db wordt gelezen
+	
 	public InsightConnector(String properties) {
 		super(properties);
 	}
 	
+	/**
+	 * Een lijst met calendarItems vanuit de modality db
+	 * @return
+	 */
 	public List<CalendarItem> getCalendarList(){
     	List<CalendarItem> result = new ArrayList<CalendarItem>();
     	this.Connect();
@@ -23,7 +29,7 @@ public class InsightConnector extends Connector {
 					+ "`ImportDocNr`, "
 					+ "`NumberColli` "
 					+ "FROM  " + this.getTabel() + " "
-					+ "WHERE `Client` = 'TIMBAL' AND `Pickup` = 1398942018000");
+					+ "WHERE `Client` = 'TIMBAL' AND `Pickup` = " + this.vanaf);
 			while(rs.next()){
 				CalendarItem booking = new CalendarItem(
 						rs.getInt(1), 
@@ -40,6 +46,11 @@ public class InsightConnector extends Connector {
     	return result;
     }
 	
+	/**
+	 * Funcite om de ETA variebelen mee op te vragen uit de database van een bepaald calendarItem
+	 * @param item waarvan je de variabelen wilt hebben
+	 * @return Array met drie long's, long[0] = arrivalPickup, long[1] = gateOuten long[2] = importGateInPickup
+	 */
 	public long[] getETAinfo(CalendarItem item){
 		long[] result = new long[3];
 		this.Connect();
@@ -58,7 +69,7 @@ public class InsightConnector extends Connector {
 				result[2] = rs.getLong(3);
  			}
 		} catch (SQLException e) {
-			System.err.println("Error getETAinfo: " + e.getMessage());
+			System.err.println("Error insightConnector getETAinfo: " + e.getMessage());
 		}
     	this.Close();
 		return result;
