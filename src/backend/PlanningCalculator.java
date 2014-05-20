@@ -79,12 +79,15 @@ public class PlanningCalculator {
 	 */
 	public static void moveToFirstFreeTimeSlot(CalendarItem toMove, List<CalendarItem> list) {
 		
-		TreeMap<CalendarItem, Calendar> map = new TreeMap<CalendarItem,Calendar>();
+		//TreeMap<CalendarItem, Calendar> map = new TreeMap<CalendarItem,Calendar>();
+		ArrayList<Calendar> arlist = new ArrayList<Calendar>();
 		for (CalendarItem item : list) {
 			if (!item.equals(toMove)) {
 				Calendar cal = Calendar.getInstance();
 				cal.setTimeInMillis(item.getStart()*1000);
-				map.put(item, cal);
+				//map.put(item, cal);
+				
+				arlist.add(cal);
 			}
 		}
 		
@@ -103,7 +106,7 @@ public class PlanningCalculator {
 			Calendar afterCal = (Calendar) time.clone(); //is een Calendar met een tijd van 1 uur na time.
 			afterCal.add(Calendar.HOUR_OF_DAY, 1);
 			
-			for (Calendar c : map.values()) {
+			for (Calendar c : arlist) {
 				if (c.after(beforeCal) && c.before(afterCal)) {
 					okay = false;
 				}
