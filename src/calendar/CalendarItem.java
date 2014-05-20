@@ -2,6 +2,7 @@ package calendar;
 
 import java.text.SimpleDateFormat;
 
+import backend.ETAcalculator;
 import backend.Hasher;
 
 public class CalendarItem {
@@ -38,6 +39,12 @@ public class CalendarItem {
 	public static final String OPMERKINGEN = "opmerkingen";
 	public static final String TITEL = "title";
 	public static final String MONGOID = "_id";
+	
+	public static final int STATUSLEEG = 0;
+	public static final int STATUSBEVESTIGD = 1;
+	public static final int STATUSFOUTMELDING = 2;
+	public static final int STATUSACTIEVEREIST = 3;
+	public static final int STATUSSPOED = 4;
 	
 	public static final String DBtemptype = "status";
 	public static final int DBoperatorid = 23; 
@@ -218,7 +225,7 @@ public class CalendarItem {
 	
 	public String toHTTPString(){
 		SimpleDateFormat sdf = new SimpleDateFormat("EEE d MMM yyyy 'om' HH:mm");
-		String date = "\"" + sdf.format(this.getBeschikbaarOp()*1000) + "\"";
+		String date = "\"" + sdf.format((this.getBeschikbaarOp() - (ETAcalculator.HOUR * 2))*1000) + "\"";
 		
 		//Resulteerd in een string zoals: "{\"operatorid\":23,\"templatetype\":\"status\",\"typeid\":2,
 		//\"id\":7,\"allDay\":false,\"start\":1399970000,\"end\":1399973000,\"title\":\"HOI b\"}";
