@@ -5,19 +5,20 @@ import java.util.*;
 public class PlanningCalculator {
 	
 	public static void main(String[] args) {
+		//test getFirstPossibility
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(2014, 4, 20, 13, 12);
-		System.out.println(getFirstPossibility(calendar.getTimeInMillis()/1000));
+		System.out.println(calculateFirstPossibility(calendar.getTimeInMillis()/1000));
 		calendar.set(2014, 4, 18, 6, 51);
-		System.out.println(getFirstPossibility(calendar.getTimeInMillis()/1000));
+		System.out.println(calculateFirstPossibility(calendar.getTimeInMillis()/1000));
 		calendar.set(2014, 4, 17, 2, 9);
-		System.out.println(getFirstPossibility(calendar.getTimeInMillis()/1000));
+		System.out.println(calculateFirstPossibility(calendar.getTimeInMillis()/1000));
 		calendar.set(2014, 4, 20, 2, 9);
-		System.out.println(getFirstPossibility(calendar.getTimeInMillis()/1000));
+		System.out.println(calculateFirstPossibility(calendar.getTimeInMillis()/1000));
 		calendar.set(2014, 4, 20, 21, 9);
-		System.out.println(getFirstPossibility(calendar.getTimeInMillis()/1000));
+		System.out.println(calculateFirstPossibility(calendar.getTimeInMillis()/1000));
 		calendar.set(2014, 4, 23, 21, 9);
-		System.out.println(getFirstPossibility(calendar.getTimeInMillis()/1000));
+		System.out.println(calculateFirstPossibility(calendar.getTimeInMillis()/1000));
 		
 		
 	}
@@ -27,7 +28,7 @@ public class PlanningCalculator {
 	 * @param st
 	 * @return
 	 */
-	public static long getFirstPossibility(long time) {
+	public static long calculateFirstPossibility(long time) { //TODO deze methode is lelijk, kan een stuk netter opgeschreven worden.
 		long result;
 		
 		Calendar cal = Calendar.getInstance();
