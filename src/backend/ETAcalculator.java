@@ -8,7 +8,7 @@ public class ETAcalculator {
 	public final static int timeFromGateOut = 20*MINUTE; 				//wanneer de container vertrekt vanuit CTTH
 	public final static int timeFromImportGateInPickup = 45*MINUTE; 	//wanneer de container full truck binnenkomt
 	public final static int timeFromArrivalPickup = 45*MINUTE; 			//wanneer de container op barge binnenkomt
-	public final static int timeFromPickup = 2*DAY; 					//wanneer de container in Rotterdam binnenkomt
+	public final static int timeFromPickup = 1*DAY; 					//wanneer de container in Rotterdam binnenkomt
 	public final static int timeDefault = 0;							//default waarde - hier kunnen we er niks over zeggen
 	
 	public static void main(String[] args) { //voor testen, boeit verder niet echt iets, mensen lezen dit toch niet.

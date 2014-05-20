@@ -29,6 +29,7 @@ public class Getter {
 	
 	private void updateLokaleDB(){
 		String mongo = http.sendGet();
+		System.out.println(mongo);
 		if(mongo != null){
 			for(CalendarItem c : Splitter.split(mongo)){
 				//update de lokale db
@@ -67,6 +68,13 @@ public class Getter {
 			http.sendDelete(item);
 		}
 	}
+	
+	public void getMongoShit(){
+		for(CalendarItem item : Splitter.split(http.sendGet())){
+			System.out.println(item.toString());
+			http.sendDelete(item);
+		}
+	}
 		
 	public List<CalendarItem> getCompleteCalendarList(){
 		List<CalendarItem> result = insight.getCalendarList();
@@ -94,6 +102,7 @@ public class Getter {
 		Getter get = new Getter();
 		get.synchronize();
 		//get.leegApplicatie();
+		//get.getMongoShit();
 	}
 
 }

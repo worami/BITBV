@@ -39,6 +39,7 @@ public class Connector {
      */
     protected void Connect(){
     	try {
+    		//System.out.println(props.getProperty("db.url"));
             con = DriverManager.getConnection(props.getProperty("db.url"), props.getProperty("db.user"), props.getProperty("db.passwd"));
             st = con.createStatement();
 
