@@ -19,6 +19,15 @@ public class ETAcalculator {
 		System.out.println(eta(0,0,0,0));
 	}
 	
+	/**
+	 * Methode die een verwachte aankomsttijd uitrekent. Deze methode verwacht input in seconden.
+	 * LET OP: als alle argumenten 0 zijn, levert deze methode 0 op.
+	 * @param pickup
+	 * @param arrivalPickup
+	 * @param gateOut
+	 * @param importGateInPickup
+	 * @return
+	 */
 	public static long eta(long pickup, long arrivalPickup, long gateOut, long importGateInPickup) {
 		
 		long result = 0;
