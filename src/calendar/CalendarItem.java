@@ -112,7 +112,7 @@ public class CalendarItem {
 	}
 	
 	public long getEind(){
-		return start + 900;
+		return start + 1800;
 	}
 	
 	public String getContainernr(){

@@ -91,11 +91,12 @@ public class Getter {
 		}
 	}
 	
-	public void getMongoShit(){
+	public void ruimDatabaseOp(){
 		for(CalendarItem item : Splitter.split(http.sendGet())){
 			System.out.println(item.toString());
 			http.sendDelete(item);
 		}
+		own.clearDatabase();
 	}
 		
 	public List<CalendarItem> getCompleteCalendarList(){
@@ -123,8 +124,9 @@ public class Getter {
 	public static void main(String[] args) {
 		Getter get = new Getter();
 		get.synchronize();
+		//get.ruimDatabaseOp();
 		//get.leegApplicatie();
-		//get.getMongoShit();
+		
 	}
 
 }

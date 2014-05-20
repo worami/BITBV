@@ -102,6 +102,16 @@ public class OwnConnector extends Connector {
 		this.Close();
 	}
 	
+	public void clearDatabase(){
+		this.Connect();
+		try {
+			st.executeUpdate("DELETE FROM " + this.getTabel());
+		} catch (SQLException e) {
+			System.err.println("error ownConnector clearDatabase: " + e.getMessage());
+		}
+		this.Close();
+	}
+	
 	/**
 	 * kijk of er al een calendaritem in de db bestaat met hetzelfde containernummer en bookingnummer
 	 * @param item
