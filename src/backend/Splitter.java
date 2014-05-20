@@ -57,33 +57,61 @@ public class Splitter {
 				}
 			}
 		}
-		
+		scanner.close();
 		return result;
 	}
-/**
- * @require DAT ALLE SHIT KLOPT YO
- * @ensure DAT ALLE SHIT HIERNA MOGELIJK OOK KLOPT YO!!1
- */
+	/**
+	 * Levert een CalendarItem op met als variabelen de meegegeven TreeMap.
+	 * LET OP: kan verscheidene Exceptions gooien bij foutieve invoer.
+	 * Als er een foutieve invoer is, levert deze methode een ContainerItem op met veel dingen op 0
+	 * @param map Een TreeMap met als key de naam van velden, en als value de waarde van velden.
+	 * @return Een CalendarItem met als variabelen de meegegeven TreeMap
+	 */
 	private static CalendarItem makeCalendarItem(TreeMap<String, String> map) {
-		int bookingnr = Integer.parseInt(map.get(CalendarItem.BOOKINGNR));
-		long start = Long.parseLong(map.get(CalendarItem.START));
-		String containernr = map.get(CalendarItem.CONTAINERNR);
-		String mrn = map.get(CalendarItem.MRN);
-		int kartons = Integer.parseInt(map.get(CalendarItem.KARTONS));
-		int units = Integer.parseInt(map.get(CalendarItem.UNITS));
-		long beschikbaarop = 0; //De beschikbaar op wordt later aangepast
-		//long beschikbaarop = Long.parseLong(map.get(CalendarItem.BESCHIKBAAR));
-		boolean gasmeting = Boolean.parseBoolean(map.get(CalendarItem.GASMETING));
-		char categorie = map.get(CalendarItem.CATEGORIE).charAt(0);
-		//om met fouten in status om te gaan
+		//default waardes
+		int bookingnr = 0;
+		long start = 0;
+		int kartons = 0;
 		int status = 0;
+		int units = 0;
+		long beschikbaarop = 0;
+		boolean gasmeting = false;
+		char categorie = 'C';
+		String mrn = map.get(CalendarItem.MRN); //deze mag evt leeg zijn
+		String opmerkingen = map.get(CalendarItem.OPMERKINGEN); //deze mag null zijn
+		
+		//Alle getallen checken - als map.get() een null oplevert komt hier ergens een numberformatexception
 		try {
+			bookingnr = Integer.parseInt(map.get(CalendarItem.BOOKINGNR));
+			start = Long.parseLong(map.get(CalendarItem.START));
+			kartons = Integer.parseInt(map.get(CalendarItem.KARTONS));
 			status = Integer.parseInt(map.get(CalendarItem.TYPEID));
+			units = Integer.parseInt(map.get(CalendarItem.UNITS));
 		} catch (NumberFormatException e) {
-			System.err.println("fout in status (Splitter makeCalendarItem): " + e.getMessage());
+			System.out.println("NumberFormatException in makeCalendarItem: " + e);
 		}
-		String opmerkingen = map.get(CalendarItem.OPMERKINGEN);
-		String mongoid = map.get(CalendarItem.MONGOID);
+		
+		//Alle booleans checken - deze moeten per stuk
+		if (map.get(CalendarItem.GASMETING) != null) {
+			gasmeting = Boolean.parseBoolean(map.get(CalendarItem.GASMETING));
+		} else {
+			System.out.println("Boolean gasmeting niet gevonden in makeCalendarItem()");
+		}
+		
+		//Containernr en mongoid checken
+		String containernr = map.get(CalendarItem.CONTAINERNR); //deze mag absoluut niet leeg zijn
+		String mongoid = map.get(CalendarItem.MONGOID); //deze kan geen null zijn, maar kan geen kwaad om te checken
+		if (containernr == null || mongoid == null) {
+			System.out.println("Er was in makeCalendarItem een containernr of mongoid op null");
+			return null;
+		}
+		
+		//Categorie checken
+		try {
+			categorie = map.get(CalendarItem.CATEGORIE).charAt(0);
+		} catch (NullPointerException e) {
+			System.out.println("Er is een char die niet gelezen kon worden in makeCalendarItem(): " + e);
+		}
 		
 		return new CalendarItem(bookingnr, start, containernr, mrn, kartons, units, beschikbaarop, gasmeting, categorie, status, opmerkingen, mongoid);
 	}

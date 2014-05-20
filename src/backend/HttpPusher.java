@@ -111,7 +111,7 @@ public class HttpPusher {
 	}
 	
 	public void deleteAll(){
-		
+		//TODO geen implementatie
 	}
 	
 	/**

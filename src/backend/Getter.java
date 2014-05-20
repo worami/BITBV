@@ -41,7 +41,7 @@ public class Getter {
 	private void updateETA(){
 		for(CalendarItem item : this.getCompleteCalendarList()){	
 			if(item.getBeschikbaarOp() > item.getStart()){
-				item.setStatus(2);
+				item.setStatus(2); //TODO is het mooi om hier een mooi naampje voor te verzinnen?
 				own.putCalendarItem(item);
 				http.sendUpdate(item);
 			} else {
