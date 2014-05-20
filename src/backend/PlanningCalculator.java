@@ -2,11 +2,13 @@ package backend;
 
 import java.util.*;
 
+import calendar.CalendarItem;
+
 public class PlanningCalculator {
 	
 	public static void main(String[] args) {
 		//test getFirstPossibility
-		Calendar calendar = Calendar.getInstance();
+		/*Calendar calendar = Calendar.getInstance();
 		calendar.set(2014, 4, 20, 13, 12);
 		System.out.println(calculateFirstPossibility(calendar.getTimeInMillis()/1000));
 		calendar.set(2014, 4, 18, 6, 51);
@@ -18,7 +20,8 @@ public class PlanningCalculator {
 		calendar.set(2014, 4, 20, 21, 9);
 		System.out.println(calculateFirstPossibility(calendar.getTimeInMillis()/1000));
 		calendar.set(2014, 4, 23, 21, 9);
-		System.out.println(calculateFirstPossibility(calendar.getTimeInMillis()/1000));
+		System.out.println(calculateFirstPossibility(calendar.getTimeInMillis()/1000));*/
+		
 		
 		
 	}
@@ -67,5 +70,53 @@ public class PlanningCalculator {
 		System.out.println("Na:   " + cal.getTime() + "; " + result);
 		
 		return result;
+	}
+	
+	/**
+	 * Verplaatst container toMove naar achteren indien er binnen één uur ervoor of één uur er na containers gepland staan.
+	 * Zoekt automatisch een goede timeslot om de container neer te zetten. 
+	 * @param toMove Mogelijk te verplaatsen container
+	 */
+	public static void moveToFirstFreeTimeSlot(CalendarItem toMove, List<CalendarItem> list) {
+		
+		TreeMap<CalendarItem, Calendar> map = new TreeMap<CalendarItem,Calendar>();
+		for (CalendarItem item : list) {
+			if (!item.equals(toMove)) {
+				Calendar cal = Calendar.getInstance();
+				cal.setTimeInMillis(item.getStart()*1000);
+				map.put(item, cal);
+			}
+		}
+		
+		Calendar time = Calendar.getInstance();
+		time.setTimeInMillis(calculateFirstPossibility(toMove.getStart())*1000);
+		boolean found = false;
+		
+		
+		
+		while (!found) {
+			boolean okay = true;
+			
+			Calendar beforeCal = (Calendar) time.clone(); //is een Calendar met een tijd van 1 uur voor time.
+			beforeCal.add(Calendar.HOUR_OF_DAY, -1);
+			
+			Calendar afterCal = (Calendar) time.clone(); //is een Calendar met een tijd van 1 uur na time.
+			afterCal.add(Calendar.HOUR_OF_DAY, 1);
+			
+			for (Calendar c : map.values()) {
+				if (c.after(beforeCal) && c.before(afterCal)) {
+					okay = false;
+				}
+			}
+			
+			if (okay) {
+				found = true;
+			} else {
+				time.add(Calendar.MINUTE, 15);
+				time.setTimeInMillis(calculateFirstPossibility(time.getTimeInMillis()/1000)*1000);
+			}
+		}
+		
+		toMove.setStart(time.getTimeInMillis()/1000);
 	}
 }
