@@ -24,6 +24,7 @@ public class Getter {
 	public void synchronize(){
 		updateLokaleDB();
 		updateETA();
+		updateStart();
 		pushNaarApplicatie();
 	}
 	
@@ -56,8 +57,19 @@ public class Getter {
 			own.putCalendarItem(item);
 			http.sendUpdate(item);
 		}
-		
-		
+	}
+	
+	private void updateStart(){
+		List<CalendarItem> lijst = this.getCompleteCalendarList();
+		for(CalendarItem item : lijst){
+			
+			if(item.getStatus() == CalendarItem.STATUSLEEG){
+				item.setStart(PlanningCalculator.calculateFirstPossibility(item.getStart()));
+				PlanningCalculator.moveToFirstFreeTimeSlot(item, lijst);
+			}
+			own.putCalendarItem(item);
+			http.sendUpdate(item);
+		}
 	}
 	
 	/**
