@@ -31,6 +31,7 @@ public class InsightConnector extends Connector {
 					+ "FROM  " + this.getTabel() + " "
 					+ "WHERE `Client` = 'TIMBAL' AND `Pickup` > " + this.vanaf);
 			while(rs.next()){
+				System.out.println("Calendar start: " + rs.getLong(2) + " CNR: " + rs.getString(3));
 				CalendarItem booking = new CalendarItem(
 						rs.getInt(1), 
 						rs.getLong(2)/1000, 

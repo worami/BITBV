@@ -29,6 +29,7 @@ public class Getter {
 	
 	private void updateLokaleDB(){
 		String mongo = http.sendGet();
+		System.out.println(mongo);
 		if(mongo != null){
 			for(CalendarItem c : Splitter.split(mongo)){
 				//update de lokale db
