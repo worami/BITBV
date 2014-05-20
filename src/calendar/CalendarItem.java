@@ -188,7 +188,7 @@ public class CalendarItem {
 		this.opmerkingen = opmerkingen;
 	}
 	
-	public void setStatus(int status){
+	public void setStatus(int status){//TODO het zou volgens mij mooi zijn om hier met public constantes te werken
 		this.status = status;
 	}
 	
