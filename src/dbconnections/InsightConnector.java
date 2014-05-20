@@ -31,7 +31,7 @@ public class InsightConnector extends Connector {
 					+ "FROM  " + this.getTabel() + " "
 					+ "WHERE `Client` = 'TIMBAL' AND `Pickup` > " + this.vanaf);
 			while(rs.next()){
-				System.out.println("Calendar start: " + rs.getLong(2) + " CNR: " + rs.getString(3));
+				//System.out.println("Calendar start: " + rs.getLong(2) + " CNR: " + rs.getString(3));
 				CalendarItem booking = new CalendarItem(
 						rs.getInt(1), 
 						rs.getLong(2)/1000, 
@@ -65,9 +65,9 @@ public class InsightConnector extends Connector {
 					+ "AND Booking = " + item.getBookingnr() 
 					+ " AND ContainerNumber = \"" + item.getContainernr() + "\"");
 			if(rs.next()){
-				result[0] = rs.getLong(1);
-				result[1] = rs.getLong(2);
-				result[2] = rs.getLong(3);
+				result[0] = rs.getLong(1)/1000;
+				result[1] = rs.getLong(2)/1000;
+				result[2] = rs.getLong(3)/1000;
  			}
 		} catch (SQLException e) {
 			System.err.println("Error insightConnector getETAinfo: " + e.getMessage());
