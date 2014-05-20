@@ -57,13 +57,15 @@ public class Splitter {
 				}
 			}
 		}
-		
+		scanner.close();
 		return result;
 	}
-/**
- * @require DAT ALLE SHIT KLOPT YO
- * @ensure DAT ALLE SHIT HIERNA MOGELIJK OOK KLOPT YO!!1
- */
+	/**
+	 * Levert een CalendarItem op met als variabelen de meegegeven TreeMap.
+	 * LET OP: kan verscheidene Exceptions gooien bij foutieve invoer.
+	 * @param map Een TreeMap met als key de naam van velden, en als value de waarde van velden.
+	 * @return Een CalendarItem met als variabelen de meegegeven TreeMap
+	 */
 	private static CalendarItem makeCalendarItem(TreeMap<String, String> map) {
 		int bookingnr = Integer.parseInt(map.get(CalendarItem.BOOKINGNR));
 		long start = Long.parseLong(map.get(CalendarItem.START));
