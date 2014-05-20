@@ -36,7 +36,7 @@ public class PlanningCalculator {
 		
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(time*1000);
-		System.out.println("Voor: " + cal.getTime() + "; " + time);
+		//System.out.println("Voor: " + cal.getTime() + "; " + time);
 		
 		if (cal.get(Calendar.HOUR_OF_DAY) < 6) {
 			//Bezorgtijd is voor 6 uur, zet tijd op 6 uur. Dit verlaat de container alleen.
@@ -67,7 +67,7 @@ public class PlanningCalculator {
 		}
 		
 		result = cal.getTimeInMillis()/1000;
-		System.out.println("Na:   " + cal.getTime() + "; " + result);
+		//System.out.println("Na:   " + cal.getTime() + "; " + result);
 		
 		return result;
 	}
