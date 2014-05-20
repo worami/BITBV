@@ -29,7 +29,7 @@ public class Getter {
 	
 	private void updateLokaleDB(){
 		String mongo = http.sendGet();
-		System.out.println(mongo);
+		//System.out.println(mongo);
 		if(mongo != null){
 			for(CalendarItem c : Splitter.split(mongo)){
 				//update de lokale db
@@ -40,14 +40,24 @@ public class Getter {
 	
 	private void updateETA(){
 		for(CalendarItem item : this.getCompleteCalendarList()){	
-			if(item.getBeschikbaarOp() > item.getStart()){
-				item.setStatus(2); //TODO is het mooi om hier een mooi naampje voor te verzinnen?
-				own.putCalendarItem(item);
-				http.sendUpdate(item);
-			} else {
-				System.out.println(item.getBeschikbaarOp() + " " + item.getStart());
+			if(item.getStatus() == CalendarItem.STATUSACTIEVEREIST){
+				if(item.getBeschikbaarOp()-item.getStart() > ETAcalculator.DAY){
+					item.setStatus(CalendarItem.STATUSFOUTMELDING); 
+					item.setOpmerkingen(item.getOpmerkingen() + " Error te vroeg ingepland");
+				} 
+			} if(item.getStatus() == CalendarItem.STATUSBEVESTIGD){
+				if(item.getBeschikbaarOp()-item.getStart() <= ETAcalculator.DAY && item.getBeschikbaarOp()-item.getStart() >= 0 ){
+					item.setStatus(CalendarItem.STATUSSPOED);
+				} else if(item.getBeschikbaarOp() > item.getStart()){
+					item.setStatus(CalendarItem.STATUSFOUTMELDING);
+					item.setOpmerkingen(item.getOpmerkingen() + " Error er is een vertraging bij de NS");
+				}
 			}
+			own.putCalendarItem(item);
+			http.sendUpdate(item);
 		}
+		
+		
 	}
 	
 	/**
@@ -83,7 +93,7 @@ public class Getter {
 			
 			//Update de ETA informatie
 			long[] etavar = insight.getETAinfo(item);
-			item.setBeschikbaarOp(ETAcalculator.eta(item.getStart(), etavar[0], etavar[1], etavar[2]));
+			item.setBeschikbaarOp(ETAcalculator.eta(etavar[0], etavar[1], etavar[2], etavar[3]));
 		}
 		return result;
 	}

@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import backend.ETAcalculator;
 import calendar.CalendarItem;
 
 public class InsightConnector extends Connector {
@@ -34,7 +35,7 @@ public class InsightConnector extends Connector {
 				//System.out.println("Calendar start: " + rs.getLong(2) + " CNR: " + rs.getString(3));
 				CalendarItem booking = new CalendarItem(
 						rs.getInt(1), 
-						rs.getLong(2)/1000, 
+						rs.getLong(2)/1000 + 3*ETAcalculator.DAY, 
 						rs.getString(3), 
 						rs.getString(4), 
 						rs.getInt(5), 0);
@@ -53,10 +54,11 @@ public class InsightConnector extends Connector {
 	 * @return Array met drie long's, long[0] = arrivalPickup, long[1] = gateOuten long[2] = importGateInPickup
 	 */
 	public long[] getETAinfo(CalendarItem item){
-		long[] result = new long[3];
+		long[] result = new long[4];
 		this.Connect();
     	try {
 			rs =st.executeQuery("SELECT "
+					+ "pickup, "
 					+ "arrivalPickup, "
 					+ "gateOut, "
 					+ "importGateInPickup "
@@ -68,6 +70,7 @@ public class InsightConnector extends Connector {
 				result[0] = rs.getLong(1)/1000;
 				result[1] = rs.getLong(2)/1000;
 				result[2] = rs.getLong(3)/1000;
+				result[3] = rs.getLong(4)/1000;
  			}
 		} catch (SQLException e) {
 			System.err.println("Error insightConnector getETAinfo: " + e.getMessage());
