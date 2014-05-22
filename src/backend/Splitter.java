@@ -28,7 +28,8 @@ public class Splitter {
 		ArrayList<CalendarItem> result = new ArrayList<CalendarItem>();
 		str = str.length() > 2 ? str.substring(2, str.length()-2) : "";
 		
-		Scanner scanner = new Scanner(str).useDelimiter("\\},\\{");
+		Scanner scanner = new Scanner(str);
+		scanner.useDelimiter("\\},\\{");
 		while(scanner.hasNext()) {
 			String next = scanner.next();
 			if (next.contains("\"operatorid\":23") && next.contains("\"templatetype\":\"statussupplychain\"")) {
