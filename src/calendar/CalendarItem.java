@@ -19,6 +19,7 @@ public class CalendarItem {
 	private String opmerkingen;
 	private int bookingnr; //Booking
 	private int status;
+	private boolean spoed;
 	private String mongoid;
 	
 	public static final String OPERATORID = "operatorid";
@@ -39,6 +40,7 @@ public class CalendarItem {
 	public static final String CATEGORIE = "categorie";
 	public static final String OPMERKINGEN = "opmerkingen";
 	public static final String TITEL = "title";
+	public static final String SPOED = "spoed";
 	public static final String MONGOID = "_id";
 	
 	public static final int STATUSLEEG = 0;
@@ -76,6 +78,7 @@ public class CalendarItem {
 		this.status = CalendarItem.STATUSACTIEVEREIST;
 		this.opmerkingen = "";
 		this.mongoid = "";
+		this.spoed = false;
 	}
 	
 	/**
@@ -91,8 +94,10 @@ public class CalendarItem {
 	 * @param categorie
 	 * @param status
 	 * @param opmerkingen
+	 * @param mongoid
+	 * @param spoed
 	 */
-	public CalendarItem(int bookingnr, long start, String containernr, String mrn, int kartons, int units, long ETA, boolean gasmeting, char categorie, int status, String opmerkingen, String mongoid){
+	public CalendarItem(int bookingnr, long start, String containernr, String mrn, int kartons, int units, long ETA, boolean gasmeting, char categorie, int status, String opmerkingen, String mongoid, boolean spoed){
 		this.bookingnr = bookingnr;
 		this.start = start;
 		this.containernr = containernr;
@@ -104,6 +109,7 @@ public class CalendarItem {
 		this.categorie = categorie;
 		this.status = status;
 		this.opmerkingen = opmerkingen;
+		this.spoed = spoed;
 		this.mongoid = mongoid;
 	}
 	
@@ -159,6 +165,10 @@ public class CalendarItem {
 		return this.mongoid;
 	}
 	
+	public boolean getSpoed(){
+		return this.spoed;
+	}
+	
 	public void setBookingnr(int bookingnr){
 		this.bookingnr = bookingnr;
 	}
@@ -205,6 +215,10 @@ public class CalendarItem {
 	
 	public void setMondoID(String id){
 		this.mongoid = id;
+	}
+	
+	public void setSpoed(boolean spoed){
+		this.spoed = spoed;
 	}
 	
 	public String toString(){

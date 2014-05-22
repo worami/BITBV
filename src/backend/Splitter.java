@@ -78,6 +78,7 @@ public class Splitter {
 		long beschikbaarop = 0;
 		boolean gasmeting = false;
 		char categorie = 'C';
+		boolean spoed = false;
 		String mrn = map.get(CalendarItem.MRN); //deze mag evt leeg zijn
 		String opmerkingen = map.get(CalendarItem.OPMERKINGEN); //deze mag null zijn
 		
@@ -114,6 +115,13 @@ public class Splitter {
 			System.out.println("Er is een char die niet gelezen kon worden in makeCalendarItem(): " + e);
 		}
 		
-		return new CalendarItem(bookingnr, start, containernr, mrn, kartons, units, beschikbaarop, gasmeting, categorie, status, opmerkingen, mongoid);
+		//Spoed
+		try {
+			spoed = Boolean.parseBoolean(map.get(CalendarItem.SPOED));
+		} catch (NullPointerException e) {
+			System.out.println("Er is een char die niet gelezen kon worden in makeCalendarItem(): " + e);
+		}
+		
+		return new CalendarItem(bookingnr, start, containernr, mrn, kartons, units, beschikbaarop, gasmeting, categorie, status, opmerkingen, mongoid, spoed);
 	}
 }

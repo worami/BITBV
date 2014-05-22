@@ -245,6 +245,11 @@ public class HttpPusher {
 		SimpleDateFormat sdf = new SimpleDateFormat("EEE d MMM yyyy 'om' HH:mm");
 		String date = "\"" + sdf.format((item.getBeschikbaarOp() - (ETAcalculator.HOUR * 2))*1000) + "\"";
 		
+		String title = item.getKartons() + "";
+		if(item.getSpoed()){
+			title = title + " SPOED!";
+		}
+		
 		//Resulteerd in een string zoals: "{\"operatorid\":23,\"templatetype\":\"status\",\"typeid\":2,
 		//\"id\":7,\"allDay\":false,\"start\":1399970000,\"end\":1399973000,\"title\":\"HOI b\"}";
 		String result = 
@@ -261,12 +266,13 @@ public class HttpPusher {
 				"\"" 	+ CalendarItem.CONTAINERNR 	+ "\":\"" 	+ item.getContainernr() + "\"," +
 				"\"" 	+ CalendarItem.MRN 			+ "\":\"" 	+ item.getMRN()			+ "\"," +
 				"\"" 	+ CalendarItem.KARTONS 		+ "\":" 	+ item.getKartons() 	+ ',' +
-				"\"" 	+ CalendarItem.TITEL 		+ "\":\"" 	+ item.getKartons() 	+ "\"," +
+				"\"" 	+ CalendarItem.TITEL 		+ "\":\"" 	+ title				 	+ "\"," +
 				"\"" 	+ CalendarItem.UNITS 		+ "\":" 	+ item.getUnits() 		+ ',' +
 				"\"" 	+ CalendarItem.BESCHIKBAAR 	+ "\":" 	+ date 					+ ',' +
 				"\"" 	+ CalendarItem.GASMETING 	+ "\":" 	+ item.getGasmeting() 	+ ',' +
 				"\"" 	+ CalendarItem.CATEGORIE 	+ "\":\"" 	+ item.getCategorie() 	+ "\"," +
-				"\"" 	+ CalendarItem.OPMERKINGEN 	+ "\":\"" 	+ item.getOpmerkingen() + "\"}";
+				"\"" 	+ CalendarItem.OPMERKINGEN 	+ "\":\"" 	+ item.getOpmerkingen() + "\"" + 
+				"\""	+ CalendarItem.SPOED		+ "\":"		+ item.getSpoed()		+ "}";
 		return result;
 	}
     

@@ -28,7 +28,8 @@ public class Getter {
 	 */
 	public void synchronize(){
 		updateLokaleDB();
-		updateETA();
+		//updateETA();
+		updateStatus();
 		updateStart();
 		pushNaarApplicatie();
 	}
@@ -65,6 +66,30 @@ public class Getter {
 		}
 	}
 	
+	private void updateStatus(){
+		for(CalendarItem item : this.getCompleteCalendarList()){
+			if(item.getStatus() == CalendarItem.STATUSACTIEVEREIST){
+				
+			}
+			if(item.getStatus() == CalendarItem.STATUSVOORSTEL){
+				//spoed? dag voor beschikbaar op
+				
+				//onmogelijke? meer dan een dag voor beschikbaar op unplan
+			}
+			if(item.getStatus() == CalendarItem.STATUSVOORSTELSPOED){
+				
+			}
+			if(item.getStatus() == CalendarItem.STATUSGOEDGEKEURD){
+				if(item.getStart() < item.getBeschikbaarOp() && !item.getSpoed()){
+					item.setStatus(CalendarItem.STATUSVERTRAGING);
+					mail.composeMail(item, "Deze container is vertraagd, plan deze opnieuw in");
+				} else if(item.getStart() < (item.getBeschikbaarOp()-ETAcalculator.DAY) && item.getSpoed()){
+					item.setStatus(CalendarItem.STATUSVERTRAGING);
+					mail.composeMail(item, "Deze container is vertraagd, plan deze opnieuw in");
+				}
+			}
+		}
+	}
 	private void updateStart(){
 		List<CalendarItem> lijst = this.getCompleteCalendarList();
 		for(CalendarItem item : lijst){
@@ -129,8 +154,8 @@ public class Getter {
 	public static void main(String[] args) {
 		Getter get = new Getter();
 		get.synchronize();
-		
-		get.updateGasPercentage();
+		//get.mail.composeMail(get.getCompleteCalendarList().get(1), "Dit was een random item!");
+		//get.updateGasPercentage();
 		
 		//get.ruimDatabaseOp();
 		//System.out.println(get.http.sendGet());
