@@ -141,12 +141,23 @@ public class Mailer {
      * Stuurt een mail met daarin de gegevens van een container
      * @param item
      */
+    public void composeMail(CalendarItem item) {
+    	composeMail(item,null);
+    } 
+    
+    /**
+     * Stuurt een mail met daarin de gegevens van een container
+     * @param item
+     */
     public void composeMail(CalendarItem item, String additionalInfo) {
     	String msg = "Bij de volgende container is een bijzondere gebeurtenis voorgevallen" + NL + NL;
     	msg += item;
-    	msg += NL + NL + LINE + NL + NL;
-    	msg += "De volgende additionele informatie werd meegegeven: " + NL;
-    	msg += additionalInfo;
+    	
+    	if (additionalInfo != null) {
+	    	msg += NL + NL + LINE + NL + NL;
+	    	msg += "De volgende additionele informatie werd meegegeven: " + NL;
+	    	msg += additionalInfo;
+    	}
     	
     	String title = "[TIMBAL-AUTOMAILER]: " + item.getContainernr();
     	
