@@ -158,7 +158,7 @@ public class Mailer {
 	    	msg += NL + NL + LINE + NL + NL;
     	}
     	
-    	msg += item;
+    	msg += item.toMailString();
     	
     	
     	
