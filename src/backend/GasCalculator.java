@@ -19,12 +19,10 @@ public class GasCalculator {
 	 * @return Een double met daarin het percentage containers waarvan aangegeven is dat ze gasgemeten moeten worden
 	 */
 	public static double calculate(List<CalendarItem> list, char categorie, long begin, long eind) {
-		double result = 0.0;
-		
 		//klein stukje errorchecking
 		if (list == null || begin>eind) {
 			System.out.println("In GasCalculator.calculate() is een foutieve aanroep gedaan. list == null || begin>eind");
-			return result;
+			return 0;
 		}
 		
 		int total = 0; //totale aantal containers van de meegegeven categorie binnen de meegegeven range
@@ -38,11 +36,11 @@ public class GasCalculator {
 			}
 		}
 		try {
-			result = (double) gasmeting / total;
+			return (double)gasmeting/total;
 		} catch (ArithmeticException e) {
 			System.out.println("In GasCalculator.calculate() is een divide by zero opgetreden. Dit kan liggen aan een lege list, een verkeerd gedefinieerde range of een foutieve categorie.");
+			return 0;
 		}
 		
-		return result;
 	}
 }
