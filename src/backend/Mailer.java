@@ -150,14 +150,17 @@ public class Mailer {
      * @param item
      */
     public void composeMail(CalendarItem item, String additionalInfo) {
-    	String msg = "Bij de volgende container is een bijzondere gebeurtenis voorgevallen" + NL + NL;
-    	msg += item;
+    	String msg = "";
     	
     	if (additionalInfo != null) {
-	    	msg += NL + NL + LINE + NL + NL;
-	    	msg += "De volgende additionele informatie werd meegegeven: " + NL;
+	    	msg += "Automatisch gegenereerde foutmelding: " + NL;
 	    	msg += additionalInfo;
+	    	msg += NL + NL + LINE + NL + NL;
     	}
+    	
+    	msg += item;
+    	
+    	
     	
     	String title = "[TIMBAL-AUTOMAILER]: " + item.getContainernr();
     	
