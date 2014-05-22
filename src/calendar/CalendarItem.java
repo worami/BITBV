@@ -265,7 +265,7 @@ public class CalendarItem {
 	
 	private String tablify(String td1, long td2) {
 		Date date = new Date(td2*1000);
-		SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy, HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy, HH:mm");
 		return tablify(td1,""+sdf.format(date));
 	}
 	
