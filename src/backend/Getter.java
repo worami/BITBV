@@ -12,6 +12,7 @@ public class Getter {
 	OwnConnector own;
 	HttpPusher http;
 	HttpPusher httplist;
+	Mailer mail;
 	
 	
 	public Getter(){
@@ -19,6 +20,7 @@ public class Getter {
 		http = new HttpPusher("database.proprties");
 		own = new OwnConnector("own.proprties");
 		httplist = new HttpPusher("httplist.proprties");
+		mail = new Mailer("database.proprties");
 	}
 	
 	/**
@@ -44,6 +46,7 @@ public class Getter {
 	
 	private void updateETA(){
 		for(CalendarItem item : this.getCompleteCalendarList()){	
+			mail.Send("bitbv2014@gmail.com", "Test: " + item.getContainernr(), "Testjes: " + item.getBookingnr());
 			if(item.getStatus() == CalendarItem.STATUSACTIEVEREIST){
 				if(item.getBeschikbaarOp()-item.getStart() > ETAcalculator.DAY){
 					item.setStatus(CalendarItem.STATUSVERTRAGING); 
@@ -66,13 +69,17 @@ public class Getter {
 		List<CalendarItem> lijst = this.getCompleteCalendarList();
 		for(CalendarItem item : lijst){
 			
-			if(item.getStatus() == CalendarItem.STATUSLEEG){
+			if(item.getStatus() == CalendarItem.STATUSACTIEVEREIST){
 				item.setStart(PlanningCalculator.calculateFirstPossibility(item.getStart()));
 				PlanningCalculator.moveToFirstFreeTimeSlot(item, lijst);
 			}
 			own.putCalendarItem(item);
 			http.sendUpdate(item);
 		}
+	}
+	
+	private void updateGasPercentage(){
+		System.out.println(GasCalculator.calculate(this.getCompleteCalendarList(),'C', 0, 999999999999L));
 	}
 	
 	/**
@@ -82,6 +89,7 @@ public class Getter {
 	private void pushNaarApplicatie(){
 		for(CalendarItem item : this.getCompleteCalendarList()){
 			http.sendPost(item);
+			httplist.sendPost(item);
 		}
 	}
 	
@@ -122,6 +130,7 @@ public class Getter {
 		Getter get = new Getter();
 		get.synchronize();
 		
+		get.updateGasPercentage();
 		
 		//get.ruimDatabaseOp();
 		//System.out.println(get.http.sendGet());
