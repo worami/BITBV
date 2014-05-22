@@ -11,7 +11,7 @@ import calendar.CalendarItem;
 public class Splitter {
 	private static String testString1 = "[{Dit is String 1},{Dit is String 2},{Dit is String, 3},{Dit is String 4}]";
 	private static HttpPusher pusher = new HttpPusher("database.proprties");
-	private static boolean printMode = false; //hiermee toggle je of de methode split() output moet leveren - kan helpen met debuggen
+	private static boolean printMode = true; //hiermee toggle je of de methode split() output moet leveren - kan helpen met debuggen
 	
 	public static void main(String[] args) {
 		long timeStart = System.currentTimeMillis();
@@ -31,7 +31,7 @@ public class Splitter {
 		Scanner scanner = new Scanner(str).useDelimiter("\\},\\{");
 		while(scanner.hasNext()) {
 			String next = scanner.next();
-			if (next.contains("\"operatorid\":23") && next.contains("\"templatetype\":\"status\"")) {
+			if (next.contains("\"operatorid\":23") && next.contains("\"templatetype\":\"statussupplychain\"")) {
 				String[] fields_s = next.split(",");
 				TreeMap<String,String> fields_t = new TreeMap<String,String>();
 				for (String x:fields_s) {

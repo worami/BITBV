@@ -43,14 +43,14 @@ public class Getter {
 		for(CalendarItem item : this.getCompleteCalendarList()){	
 			if(item.getStatus() == CalendarItem.STATUSACTIEVEREIST){
 				if(item.getBeschikbaarOp()-item.getStart() > ETAcalculator.DAY){
-					item.setStatus(CalendarItem.STATUSFOUTMELDING); 
+					item.setStatus(CalendarItem.STATUSVERTRAGING); 
 					item.setOpmerkingen(item.getOpmerkingen() + " Error te vroeg ingepland");
 				} 
-			} if(item.getStatus() == CalendarItem.STATUSBEVESTIGD){
+			} if(item.getStatus() == CalendarItem.STATUSGOEDGEKEURD){
 				if(item.getBeschikbaarOp()-item.getStart() <= ETAcalculator.DAY && item.getBeschikbaarOp()-item.getStart() >= 0 ){
-					item.setStatus(CalendarItem.STATUSSPOED);
+					item.setStatus(CalendarItem.STATUSVOORSTELSPOED);
 				} else if(item.getBeschikbaarOp() > item.getStart()){
-					item.setStatus(CalendarItem.STATUSFOUTMELDING);
+					item.setStatus(CalendarItem.STATUSVERTRAGING);
 					item.setOpmerkingen(item.getOpmerkingen() + " Error er is een vertraging bij de NS");
 				}
 			}
@@ -124,8 +124,11 @@ public class Getter {
 	public static void main(String[] args) {
 		Getter get = new Getter();
 		get.synchronize();
+		
+		
 		//get.ruimDatabaseOp();
 		//get.leegApplicatie();
+		System.out.println(get.http.sendGet());
 		
 	}
 

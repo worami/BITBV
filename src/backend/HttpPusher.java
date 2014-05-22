@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -25,7 +26,7 @@ public class HttpPusher {
 	private String url;
 	private String token;
 	
-	final String DBtemptype = "status";
+	final String DBtemptype = "statussupplychain";
 	final int DBoperatorid = 23; 
 	
 	private Properties httpprops;
@@ -100,7 +101,7 @@ public class HttpPusher {
 		//String test = "{\"operatorid\":23,\"templatetype\":\"status\",\"typeid\":2,\"id\":7,\"allDay\":false,\"start\":1399970000,\"end\":1399973000,\"title\":\"HOI blala\"}";
 		StringEntity se;
 		try {
-			se = new StringEntity(item.toHTTPString());
+			se = new StringEntity(this.toHTTPString(item));
 		    post.setEntity(se);
 		    client.execute(post);
 		} catch (UnsupportedEncodingException e) {
@@ -145,7 +146,7 @@ public class HttpPusher {
  
 		StringEntity se;
 		try {
-			String updateQuery = "{\"$set\":" + item.toHTTPString() + "}";
+			String updateQuery = "{\"$set\":" + this.toHTTPString(item) + "}";
 			//String updateQuery = "{\"$set\":{\"typeid\":1}}";
 			se = new StringEntity(updateQuery);
 			put.setEntity(se);
@@ -153,6 +154,72 @@ public class HttpPusher {
 		} catch (IOException e) {
 			System.err.println("error: http update " + e.getMessage());
 		}
+	}
+	
+	public String getConfiguration(){
+		HttpClient client = HttpClientBuilder.create().build();
+		HttpGet request = new HttpGet("http://insight.exomodal.com:80/collectionapi/calendar_configuration");
+		
+		// add request header
+		request.setHeader("X-Auth-Token", token);
+ 
+		HttpResponse response;
+
+		String result = "";
+		
+		try {
+			response = client.execute(request);
+			BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+			result = rd.readLine();
+		} catch (IOException e) {
+			System.err.println("error: http get " + e.getMessage());
+		}
+ 
+		return result;
+	}
+	
+	public String getListConfiguration(){
+		HttpClient client = HttpClientBuilder.create().build();
+		HttpGet request = new HttpGet("http://insight.exomodal.com:80/collectionapi/list_configuration");
+		
+		// add request header
+		request.setHeader("X-Auth-Token", token);
+ 
+		HttpResponse response;
+
+		String result = "";
+		
+		try {
+			response = client.execute(request);
+			BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+			result = rd.readLine();
+		} catch (IOException e) {
+			System.err.println("error: http get " + e.getMessage());
+		}
+ 
+		return result;
+	}
+	
+	public String getDropdownConfiguration(){
+		HttpClient client = HttpClientBuilder.create().build();
+		HttpGet request = new HttpGet("http://insight.exomodal.com/collectionapi/calendar_dropdown");
+		
+		// add request header
+		request.setHeader("X-Auth-Token", token);
+ 
+		HttpResponse response;
+
+		String result = "";
+		
+		try {
+			response = client.execute(request);
+			BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+			result = rd.readLine();
+		} catch (IOException e) {
+			System.err.println("error: http get " + e.getMessage());
+		}
+ 
+		return result;
 	}
 	
 	/**
@@ -171,19 +238,45 @@ public class HttpPusher {
         	System.err.println(e.getMessage());
         }
     }
+    
+    public String toHTTPString(CalendarItem item){
+		SimpleDateFormat sdf = new SimpleDateFormat("EEE d MMM yyyy 'om' HH:mm");
+		String date = "\"" + sdf.format((item.getBeschikbaarOp() - (ETAcalculator.HOUR * 2))*1000) + "\"";
+		
+		//Resulteerd in een string zoals: "{\"operatorid\":23,\"templatetype\":\"status\",\"typeid\":2,
+		//\"id\":7,\"allDay\":false,\"start\":1399970000,\"end\":1399973000,\"title\":\"HOI b\"}";
+		String result = "{\"" + CalendarItem.OPERATORID + "\":" + this.DBoperatorid + ',' +
+				"\"" + CalendarItem.TEMPLATETYPE + "\":\"" + this.DBtemptype + "\"," +
+				"\"" + CalendarItem.TYPEID + "\":" + item.getStatus() + ',' +
+				"\"" + CalendarItem.ID + "\":" + Hasher.hash(item.getBookingnr(), item.getContainernr()) + ',' +
+				"\"" + CalendarItem.CALLS + "\":\"" + item.getBookingnr() + "\"," +
+				"\"" + CalendarItem.ALLDAY + "\":" + false + ',' +
+				"\"" + CalendarItem.START + "\":" + item.getStart() + ',' +
+				"\"" + CalendarItem.END + "\":" + item.getEind() + ',' +
+				"\"" + CalendarItem.BOOKINGNR + "\":" + item.getBookingnr() + ',' +
+				"\"" + CalendarItem.CONTAINERNR + "\":\"" + item.getContainernr() + "\"," +
+				"\"" + CalendarItem.MRN + "\":\"" + item.getMRN() + "\"," +
+				"\"" + CalendarItem.KARTONS + "\":" + item.getKartons() + ',' +
+				"\"" + CalendarItem.TITEL + "\":\"" + item.getKartons() + "\"," +
+				"\"" + CalendarItem.UNITS + "\":" + item.getUnits() + ',' +
+				"\"" + CalendarItem.BESCHIKBAAR + "\":" + date + ',' +
+				"\"" + CalendarItem.GASMETING + "\":" + item.getGasmeting() + ',' +
+				"\"" + CalendarItem.CATEGORIE + "\":\"" + item.getCategorie() + "\"," +
+				"\"" + CalendarItem.OPMERKINGEN + "\":\"" + item.getOpmerkingen() + "\"}";
+		return result;
+	}
+    
+    
 	
 	public static void main(String[] args) throws Exception {
 		 
 		HttpPusher http = new HttpPusher("database.proprties");
  
-		//System.out.println("Testing 1 - Send Http GET request");
-		System.out.println(http.sendGet());
-		//http.sendDelete("MLzTkF9EBLjk4br8A");
-		//http.sendUpdate("gZ6WjM4TyjfEkGYw7");
-		//System.out.println(http.sendGet("gZ6WjM4TyjfEkGYw7").toString());
+		//System.out.println(http.sendGet());
 		//http.sendGet();
-		//System.out.println("\nTesting 2 - Send Http POST request");
 		//http.sendPost();
+		
+		System.out.println(http.getDropdownConfiguration());
  
 	}
  

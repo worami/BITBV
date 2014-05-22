@@ -41,12 +41,15 @@ public class CalendarItem {
 	public static final String MONGOID = "_id";
 	
 	public static final int STATUSLEEG = 0;
-	public static final int STATUSBEVESTIGD = 1;
-	public static final int STATUSFOUTMELDING = 2;
-	public static final int STATUSACTIEVEREIST = 3;
-	public static final int STATUSSPOED = 4;
+	public static final int STATUSACTIEVEREIST = 1;
+	public static final int STATUSACTIEVEREISTUPDATE = 2;
+	public static final int STATUSVOORSTEL = 3;
+	public static final int STATUSVOORSTELSPOED = 4;
+	public static final int STATUSGOEDGEKEURD = 5;
+	public static final int STATUSGASMETINGMIS = 6;
+	public static final int STATUSVERTRAGING = 7;
 	
-	public static final String DBtemptype = "status";
+	public static final String DBtemptype = "statussupplychain";
 	public static final int DBoperatorid = 23; 
 	
 	/**
@@ -223,6 +226,7 @@ public class CalendarItem {
 				+ CalendarItem.OPMERKINGEN + ": " + this.getOpmerkingen();
 	}
 	
+	/**
 	public String toHTTPString(){
 		SimpleDateFormat sdf = new SimpleDateFormat("EEE d MMM yyyy 'om' HH:mm");
 		String date = "\"" + sdf.format((this.getBeschikbaarOp() - (ETAcalculator.HOUR * 2))*1000) + "\"";
@@ -248,7 +252,7 @@ public class CalendarItem {
 				"\"" + CalendarItem.CATEGORIE + "\":\"" + this.getCategorie() + "\"," +
 				"\"" + CalendarItem.OPMERKINGEN + "\":\"" + this.getOpmerkingen() + "\"}";
 		return result;
-	}
+	}**/
 	
 	public boolean equals(CalendarItem e){
 		return (Hasher.hash(this.getBookingnr(), this.getContainernr()) == Hasher.hash(e.getBookingnr(), e.getContainernr()));
@@ -257,7 +261,6 @@ public class CalendarItem {
 	public static void main(String[] args) throws Exception {
 		 
 		CalendarItem test = new CalendarItem(12, 13, "test", "test", 12, 12);
-		System.out.println(test.toHTTPString());
  
 	}
 	
