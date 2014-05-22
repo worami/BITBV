@@ -226,6 +226,50 @@ public class CalendarItem {
 				+ CalendarItem.OPMERKINGEN + ": " + this.getOpmerkingen();
 	}
 	
+	public String toMailString() {
+		String result = "<table>";
+		result += tablify("Containernr:",this.getContainernr());
+		result += tablify("Boekingnr: ",this.getBookingnr());
+		result += tablify(CalendarItem.TYPEID,this.getStatus());
+		result += tablify(CalendarItem.CALLS,this.getBookingnr());
+		result += tablify(CalendarItem.ALLDAY,false);
+		result += tablify(CalendarItem.START,this.getStart());
+		result += tablify(CalendarItem.END,this.getEind());
+		result += tablify(CalendarItem.BOOKINGNR,this.getBookingnr());
+		result += tablify(CalendarItem.CONTAINERNR,this.getContainernr());
+		result += tablify(CalendarItem.MRN,this.getMRN());
+		result += tablify(CalendarItem.KARTONS,this.getKartons());
+		result += tablify(CalendarItem.TITEL,this.getKartons());
+		result += tablify(CalendarItem.UNITS,this.getUnits());
+		result += tablify(CalendarItem.BESCHIKBAAR,this.beschikbaarop);
+		result += tablify(CalendarItem.GASMETING,this.getGasmeting());
+		result += tablify(CalendarItem.CATEGORIE,this.getCategorie());
+		result += tablify(CalendarItem.OPMERKINGEN,this.getOpmerkingen());
+		
+		result += "</table>";
+		return result;
+	}
+	
+	private String tablify(String td1, String td2) {
+		return "<tr><td>" + td1 + "</td><td>" + td2 + "</td></tr>";
+	}
+	//Overload methods for Tablify
+	private String tablify(String td1, int td2) {
+		return tablify(td1,""+td2);
+	}
+	
+	private String tablify(String td1, boolean td2) {
+		return tablify(td1,""+td2);
+	}
+	
+	private String tablify(String td1, long td2) {
+		return tablify(td1,""+td2);
+	}
+	
+	private String tablify(String td1, char td2) {
+		return tablify(td1,""+td2);
+	}
+	
 	/**
 	public String toHTTPString(){
 		SimpleDateFormat sdf = new SimpleDateFormat("EEE d MMM yyyy 'om' HH:mm");
