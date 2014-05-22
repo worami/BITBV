@@ -1,6 +1,7 @@
 package calendar;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import backend.ETAcalculator;
 import backend.Hasher;
@@ -234,7 +235,7 @@ public class CalendarItem {
 		result += tablify(CalendarItem.CALLS,this.getBookingnr());
 		result += tablify(CalendarItem.ALLDAY,false);
 		result += tablify(CalendarItem.START,this.getStart());
-		result += tablify(CalendarItem.END,this.getEind());
+		//result += tablify(CalendarItem.END,this.getEind());
 		result += tablify(CalendarItem.BOOKINGNR,this.getBookingnr());
 		result += tablify(CalendarItem.CONTAINERNR,this.getContainernr());
 		result += tablify(CalendarItem.MRN,this.getMRN());
@@ -263,7 +264,9 @@ public class CalendarItem {
 	}
 	
 	private String tablify(String td1, long td2) {
-		return tablify(td1,""+td2);
+		Date date = new Date(td2);
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MMM/yy HH:mm:ss");
+		return tablify(td1,""+sdf.format(date));
 	}
 	
 	private String tablify(String td1, char td2) {
