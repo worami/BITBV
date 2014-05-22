@@ -102,7 +102,8 @@ public class Mailer {
 	        }
 
 	        msg.setSubject(title);
-	        msg.setText(message, "utf-8");
+	        //msg.setText(message, "utf-8");
+	        msg.setContent(message, "utf-8");
 	        msg.setSentDate(new Date());
 
 	        SMTPTransport t = (SMTPTransport)session.getTransport("smtps");
