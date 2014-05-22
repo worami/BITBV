@@ -229,18 +229,19 @@ public class CalendarItem {
 	
 	public String toMailString() {
 		String result = "<table>";
+		
 		result += tablify("Containernr:",this.getContainernr());
 		result += tablify("Boekingnr: ",this.getBookingnr());
 		result += tablify(CalendarItem.TYPEID,this.getStatus());
-		result += tablify(CalendarItem.CALLS,this.getBookingnr());
-		result += tablify(CalendarItem.ALLDAY,false);
+		//result += tablify(CalendarItem.CALLS,this.getBookingnr());
+		//result += tablify(CalendarItem.ALLDAY,false);
 		result += tablify(CalendarItem.START,this.getStart());
 		//result += tablify(CalendarItem.END,this.getEind());
-		result += tablify(CalendarItem.BOOKINGNR,this.getBookingnr());
-		result += tablify(CalendarItem.CONTAINERNR,this.getContainernr());
+		//result += tablify(CalendarItem.BOOKINGNR,this.getBookingnr());
+		//result += tablify(CalendarItem.CONTAINERNR,this.getContainernr());
 		result += tablify(CalendarItem.MRN,this.getMRN());
 		result += tablify(CalendarItem.KARTONS,this.getKartons());
-		result += tablify(CalendarItem.TITEL,this.getKartons());
+		//result += tablify(CalendarItem.TITEL,this.getKartons());
 		result += tablify(CalendarItem.UNITS,this.getUnits());
 		result += tablify(CalendarItem.BESCHIKBAAR,this.beschikbaarop);
 		result += tablify(CalendarItem.GASMETING,this.getGasmeting());
