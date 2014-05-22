@@ -46,7 +46,7 @@ public class Getter {
 	
 	private void updateETA(){
 		for(CalendarItem item : this.getCompleteCalendarList()){	
-			mail.Send("bitbv2014@gmail.com", "Test: " + item.getContainernr(), "Testjes: " + item.getBookingnr());
+			//mail.Send("bitbv2014@gmail.com", "Test: " + item.getContainernr(), "Testjes: " + item.getBookingnr());
 			if(item.getStatus() == CalendarItem.STATUSACTIEVEREIST){
 				if(item.getBeschikbaarOp()-item.getStart() > ETAcalculator.DAY){
 					item.setStatus(CalendarItem.STATUSVERTRAGING); 

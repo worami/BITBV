@@ -1,5 +1,7 @@
 package backend;
 
+import calendar.CalendarItem;
+
 import com.sun.mail.smtp.SMTPTransport;
 
 import java.io.FileInputStream;
@@ -21,6 +23,10 @@ import javax.mail.internet.MimeMessage;
  * @author doraemon
  */
 public class Mailer {
+	
+	private static final String RECEIVER = "bitbv2014@gmail.com"; //recipient of mail
+	private static final String NL = System.getProperty("line.separator"); //Line separator
+	private static final String LINE = "-----------------------------------------"; //Horizontal line
     
 	String username;
 	String password;
@@ -42,7 +48,7 @@ public class Mailer {
      * @throws AddressException if the email address parse failed
      * @throws MessagingException if the connection is dead or not in the connected state or if the message is not a MimeMessage
      */
-    public void Send(String recipientEmail, String title, String message) {
+    private void Send(String recipientEmail, String title, String message) {
         this.Send(recipientEmail, "", title, message);
     }
 
@@ -58,7 +64,7 @@ public class Mailer {
      * @throws AddressException if the email address parse failed
      * @throws MessagingException if the connection is dead or not in the connected state or if the message is not a MimeMessage
      */
-    public void Send(String recipientEmail, String ccEmail, String title, String message) {
+    private void Send(String recipientEmail, String ccEmail, String title, String message) {
         Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
         final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
 
@@ -129,5 +135,21 @@ public class Mailer {
         } catch (IOException e){
         	System.err.println(e.getMessage());
         }
+    }
+    
+    /**
+     * Stuurt een mail met daarin de gegevens van een container
+     * @param item
+     */
+    public void composeMail(CalendarItem item, String additionalInfo) {
+    	String msg = "Bij de volgende container is een bijzondere gebeurtenis voorgevallen" + NL + NL;
+    	msg += item;
+    	msg += NL + NL + LINE + NL + NL;
+    	msg += "De volgende additionele informatie werd meegegeven: " + NL;
+    	msg += additionalInfo;
+    	
+    	String title = "[TIMBAL-AUTOMAILER]: " + item.getContainernr();
+    	
+    	this.Send(RECEIVER, title, msg);
     }
 }
