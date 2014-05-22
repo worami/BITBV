@@ -94,7 +94,6 @@ public class HttpPusher {
 		HttpClient client = HttpClientBuilder.create().build();
 		HttpPost post = new HttpPost(url);
  
-		System.out.println("url: " + this.toHTTPString(item));
 		// add header
 		post.setHeader("X-Auth-Token", token);
 
@@ -242,10 +241,13 @@ public class HttpPusher {
     }
     
     public String toHTTPString(CalendarItem item){
-		SimpleDateFormat sdf = new SimpleDateFormat("EEE d MMM yyyy 'om' HH:mm");
+		//Zet de datum beschikbaar op om in een string
+    	SimpleDateFormat sdf = new SimpleDateFormat("EEE d MMM yyyy 'om' HH:mm");
 		String date = "\"" + sdf.format((item.getBeschikbaarOp() - (ETAcalculator.HOUR * 2))*1000) + "\"";
 		
-		String title = item.getKartons() + "";
+		//Zet de titel van een calendar item
+		String title = "- " + item.getKartons();
+		//Zet spoed in de naam als er spoed is
 		if(item.getSpoed()){
 			title = title + " SPOED!";
 		}
@@ -271,7 +273,7 @@ public class HttpPusher {
 				"\"" 	+ CalendarItem.BESCHIKBAAR 	+ "\":" 	+ date 					+ ',' +
 				"\"" 	+ CalendarItem.GASMETING 	+ "\":" 	+ item.getGasmeting() 	+ ',' +
 				"\"" 	+ CalendarItem.CATEGORIE 	+ "\":\"" 	+ item.getCategorie() 	+ "\"," +
-				"\"" 	+ CalendarItem.OPMERKINGEN 	+ "\":\"" 	+ item.getOpmerkingen() + "\"" + 
+				"\"" 	+ CalendarItem.OPMERKINGEN 	+ "\":\"" 	+ item.getOpmerkingen() + "\"," + 
 				"\""	+ CalendarItem.SPOED		+ "\":"		+ item.getSpoed()		+ "}";
 		return result;
 	}
