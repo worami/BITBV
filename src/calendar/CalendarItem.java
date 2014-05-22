@@ -72,7 +72,7 @@ public class CalendarItem {
 		this.units = 0;
 		this.gasmeting = false;
 		this.categorie = 'C';
-		this.status = 0;
+		this.status = CalendarItem.STATUSACTIEVEREIST;
 		this.opmerkingen = "";
 		this.mongoid = "";
 	}

@@ -25,9 +25,8 @@ public class HttpPusher {
  
 	private String url;
 	private String token;
-	
-	final String DBtemptype = "statussupplychain";
-	final int DBoperatorid = 23; 
+	private String temptype;
+	private int operatorid;
 	
 	private Properties httpprops;
 	
@@ -231,6 +230,8 @@ public class HttpPusher {
             httpprops.load(in);
             token = httpprops.getProperty("http.token");
             url = httpprops.getProperty("http.url");
+            temptype = httpprops.getProperty("http.temptype");
+            operatorid = 23; //httpprops.getProperty("http.operatorid");
         } catch (FileNotFoundException ex) {
             System.err.println(ex.getMessage());
 
@@ -245,8 +246,8 @@ public class HttpPusher {
 		
 		//Resulteerd in een string zoals: "{\"operatorid\":23,\"templatetype\":\"status\",\"typeid\":2,
 		//\"id\":7,\"allDay\":false,\"start\":1399970000,\"end\":1399973000,\"title\":\"HOI b\"}";
-		String result = "{\"" + CalendarItem.OPERATORID + "\":" + this.DBoperatorid + ',' +
-				"\"" + CalendarItem.TEMPLATETYPE + "\":\"" + this.DBtemptype + "\"," +
+		String result = "{\"" + CalendarItem.OPERATORID + "\":" + this.token + ',' +
+				"\"" + CalendarItem.TEMPLATETYPE + "\":\"" + this.operatorid + "\"," +
 				"\"" + CalendarItem.TYPEID + "\":" + item.getStatus() + ',' +
 				"\"" + CalendarItem.ID + "\":" + Hasher.hash(item.getBookingnr(), item.getContainernr()) + ',' +
 				"\"" + CalendarItem.CALLS + "\":\"" + item.getBookingnr() + "\"," +

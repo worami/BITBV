@@ -11,11 +11,14 @@ public class Getter {
 	InsightConnector insight;
 	OwnConnector own;
 	HttpPusher http;
+	HttpPusher httplist;
+	
 	
 	public Getter(){
 		insight = new InsightConnector("database.proprties");
 		http = new HttpPusher("database.proprties");
 		own = new OwnConnector("own.proprties");
+		httplist = new HttpPusher("httplist.proprties");
 	}
 	
 	/**
@@ -85,15 +88,9 @@ public class Getter {
 	/** 
 	 * Verwijder al onze (Temptype status en typeid 23) calendaritems uit de applicatie
 	 */
-	public void leegApplicatie(){
-		for(CalendarItem item : this.getCompleteCalendarList()){
-			http.sendDelete(item);
-		}
-	}
-	
 	public void ruimDatabaseOp(){
 		for(CalendarItem item : Splitter.split(http.sendGet())){
-			System.out.println(item.toString());
+			//System.out.println(item.toString());
 			http.sendDelete(item);
 		}
 		own.clearDatabase();
@@ -127,8 +124,7 @@ public class Getter {
 		
 		
 		//get.ruimDatabaseOp();
-		//get.leegApplicatie();
-		System.out.println(get.http.sendGet());
+		//System.out.println(get.http.sendGet());
 		
 	}
 
