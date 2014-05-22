@@ -246,24 +246,25 @@ public class HttpPusher {
 		
 		//Resulteerd in een string zoals: "{\"operatorid\":23,\"templatetype\":\"status\",\"typeid\":2,
 		//\"id\":7,\"allDay\":false,\"start\":1399970000,\"end\":1399973000,\"title\":\"HOI b\"}";
-		String result = "{\"" + CalendarItem.OPERATORID + "\":" + this.token + ',' +
-				"\"" + CalendarItem.TEMPLATETYPE + "\":\"" + this.operatorid + "\"," +
-				"\"" + CalendarItem.TYPEID + "\":" + item.getStatus() + ',' +
-				"\"" + CalendarItem.ID + "\":" + Hasher.hash(item.getBookingnr(), item.getContainernr()) + ',' +
-				"\"" + CalendarItem.CALLS + "\":\"" + item.getBookingnr() + "\"," +
-				"\"" + CalendarItem.ALLDAY + "\":" + false + ',' +
-				"\"" + CalendarItem.START + "\":" + item.getStart() + ',' +
-				"\"" + CalendarItem.END + "\":" + item.getEind() + ',' +
-				"\"" + CalendarItem.BOOKINGNR + "\":" + item.getBookingnr() + ',' +
-				"\"" + CalendarItem.CONTAINERNR + "\":\"" + item.getContainernr() + "\"," +
-				"\"" + CalendarItem.MRN + "\":\"" + item.getMRN() + "\"," +
-				"\"" + CalendarItem.KARTONS + "\":" + item.getKartons() + ',' +
-				"\"" + CalendarItem.TITEL + "\":\"" + item.getKartons() + "\"," +
-				"\"" + CalendarItem.UNITS + "\":" + item.getUnits() + ',' +
-				"\"" + CalendarItem.BESCHIKBAAR + "\":" + date + ',' +
-				"\"" + CalendarItem.GASMETING + "\":" + item.getGasmeting() + ',' +
-				"\"" + CalendarItem.CATEGORIE + "\":\"" + item.getCategorie() + "\"," +
-				"\"" + CalendarItem.OPMERKINGEN + "\":\"" + item.getOpmerkingen() + "\"}";
+		String result = 
+				"{\"" 	+ CalendarItem.OPERATORID 	+ "\":" 	+ this.operatorid + ',' +
+				"\"" 	+ CalendarItem.TEMPLATETYPE + "\":\"" 	+ this.temptype + "\"," +
+				"\"" 	+ CalendarItem.TYPEID 		+ "\":" 	+ item.getStatus() + ',' +
+				"\"" 	+ CalendarItem.ID 			+ "\":" 	+ Hasher.hash(item.getBookingnr(), item.getContainernr()) + ',' +
+				"\"" 	+ CalendarItem.CALLS 		+ "\":\"" 	+ item.getBookingnr() + "\"," +
+				"\"" 	+ CalendarItem.ALLDAY 		+ "\":" 	+ false + ',' +
+				"\"" 	+ CalendarItem.START 		+ "\":" 	+ item.getStart() + ',' +
+				"\"" 	+ CalendarItem.END 			+ "\":" 	+ item.getEind() + ',' +
+				"\"" 	+ CalendarItem.BOOKINGNR 	+ "\":" 	+ item.getBookingnr() + ',' +
+				"\"" 	+ CalendarItem.CONTAINERNR 	+ "\":\"" 	+ item.getContainernr() + "\"," +
+				"\"" 	+ CalendarItem.MRN 			+ "\":\"" 	+ item.getMRN() + "\"," +
+				"\"" 	+ CalendarItem.KARTONS 		+ "\":" 	+ item.getKartons() + ',' +
+				"\"" 	+ CalendarItem.TITEL 		+ "\":\"" 	+ item.getKartons() + "\"," +
+				"\"" 	+ CalendarItem.UNITS 		+ "\":" 	+ item.getUnits() + ',' +
+				"\"" 	+ CalendarItem.BESCHIKBAAR 	+ "\":" 	+ date + ',' +
+				"\"" 	+ CalendarItem.GASMETING 	+ "\":" 	+ item.getGasmeting() + ',' +
+				"\"" 	+ CalendarItem.CATEGORIE 	+ "\":\"" 	+ item.getCategorie() + "\"," +
+				"\"" 	+ CalendarItem.OPMERKINGEN 	+ "\":\"" 	+ item.getOpmerkingen() + "\"}";
 		return result;
 	}
     
