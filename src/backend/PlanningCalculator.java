@@ -5,6 +5,14 @@ import java.util.*;
 import calendar.CalendarItem;
 
 public class PlanningCalculator {
+	/* 
+	 * VARIABELEN VOOR PLANNICELY
+	 */
+	public static final int MAX_KARTONS_UUR = 1000; //MOET DEELBAAR ZIJN DOOR 4
+	public static final int MAX_UUR_DAG = 19 - 6; //van 6:00 tot 20:00 exclusive, dus 13
+	public static final int MAX_KARTONS_DAG = MAX_KARTONS_UUR * MAX_UUR_DAG; //13000 met huidige implementatie
+	
+	
 	
 	public static void main(String[] args) {
 		//test getFirstPossibility
