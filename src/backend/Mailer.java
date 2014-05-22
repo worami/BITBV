@@ -25,7 +25,7 @@ import javax.mail.internet.MimeMessage;
 public class Mailer {
 	
 	private static final String RECEIVER = "bitbv2014@gmail.com"; //recipient of mail
-	private static final String NL = System.getProperty("line.separator"); //Line separator
+	private static final String NL = "<br />" ; //Line separator
 	private static final String LINE = "-----------------------------------------"; //Horizontal line
     
 	String username;
@@ -159,6 +159,7 @@ public class Mailer {
 	    	msg += NL + NL + LINE + NL + NL;
     	}
     	
+    	msg += "Container-informatie: " + NL;
     	msg += item.toMailString();
     	
     	
