@@ -1,7 +1,10 @@
 package dbconnections;
 
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import backend.ETAcalculator;
@@ -77,6 +80,58 @@ public class InsightConnector extends Connector {
 		}
     	this.Close();
 		return result;
+	}
+	
+	public static void updateDate(){
+		OwnConnector date = new OwnConnector("database.proprties");
+		SimpleDateFormat fromDB = new SimpleDateFormat("dd-MM-yyyy HH:mm Z");
+		String datum;
+		String tijd;
+		int booking;
+
+		List<String> queries = new ArrayList<String>();
+		
+		date.Connect();
+		try {
+			date.rs = date.st.executeQuery("SELECT "
+					+ "PickupDate, "
+					+ "PickupTime, "
+					+ "Booking "
+					+ "FROM "  + date.getTabel()
+					+ " WHERE Client = 'TIMBAL' AND Pickup IS NULL");
+			while(date.rs.next()){
+				datum = date.rs.getString(1);
+				tijd = date.rs.getString(2);
+				booking = date.rs.getInt(3);
+				if(datum.length() >1 && tijd.length() > 1 && booking > 100){
+					Date nieuw = fromDB.parse(datum + " " + tijd + " +0200");
+					queries.add("UPDATE " + date.getTabel() + " SET " + 
+						"Pickup = " + nieuw.getTime() +  " WHERE Booking = " + booking);
+				}
+			}
+		} catch (SQLException e) {
+			System.err.println("error ownconnection getcalendardate: " + e.getMessage());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		date.Close();
+		
+		for(String s : queries){
+			date.Connect();
+			try {
+			    date.st.executeUpdate(s);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			date.Close();
+		}
+		
+	}
+	
+	public static void main(String[] args){
+		updateDate();
 	}
 
 }
