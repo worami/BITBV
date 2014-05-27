@@ -47,13 +47,14 @@ public class CalendarItem {
 	public static final int STATUSACTIEVEREIST = 1;
 	public static final int STATUSACTIEVEREISTUPDATE = 2;
 	public static final int STATUSVOORSTEL = 3;
-	public static final int STATUSVOORSTELSPOED = 4;
+	//public static final int STATUSVOORSTELSPOED = 4;
 	public static final int STATUSGOEDGEKEURD = 5;
 	public static final int STATUSGASMETINGMIS = 6;
 	public static final int STATUSVERTRAGING = 7;
+	public static final int STATUSBEZORGD = 8;
 	
-	public static final String DBtemptype = "statussupplychain";
-	public static final int DBoperatorid = 23; 
+	//public static final String DBtemptype = "statussupplychain";
+	//public static final int DBoperatorid = 23; 
 	
 	/**
 	 * 
