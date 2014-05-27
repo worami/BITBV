@@ -79,6 +79,8 @@ public class Splitter {
 		boolean gasmeting = false;
 		char categorie = 'C';
 		boolean spoed = false;
+		int pickupdock = 0;
+		int dropoffdock = 0;
 		String mrn = map.get(CalendarItem.MRN); //deze mag evt leeg zijn
 		String opmerkingen = map.get(CalendarItem.OPMERKINGEN); //deze mag null zijn
 		
@@ -122,6 +124,16 @@ public class Splitter {
 			System.out.println("Er is een char die niet gelezen kon worden in makeCalendarItem(): " + e);
 		}
 		
-		return new CalendarItem(bookingnr, start, containernr, mrn, kartons, units, beschikbaarop, gasmeting, categorie, status, opmerkingen, mongoid, spoed);
+		//pickup-/dropoffdock
+		try {
+			pickupdock = Integer.parseInt(CalendarItem.PICKUPDOCK);
+			dropoffdock = Integer.parseInt(CalendarItem.DROPOFFDOCK);
+			
+			spoed = Boolean.parseBoolean(map.get(CalendarItem.SPOED));
+		} catch (NumberFormatException e) {
+			System.out.println("Er is een char die niet gelezen kon worden in makeCalendarItem(): " + e);
+		}
+		
+		return new CalendarItem(bookingnr, start, containernr, mrn, kartons, units, beschikbaarop, gasmeting, categorie, status, opmerkingen, mongoid, spoed, pickupdock, dropoffdock);
 	}
 }

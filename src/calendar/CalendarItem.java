@@ -20,6 +20,8 @@ public class CalendarItem {
 	private int bookingnr; //Booking
 	private int status;
 	private boolean spoed;
+	private int dropoffdock;
+	private int pickupdock;
 	private String mongoid;
 	
 	public static final String OPERATORID = "operatorid";
@@ -41,6 +43,8 @@ public class CalendarItem {
 	public static final String OPMERKINGEN = "opmerkingen";
 	public static final String TITEL = "title";
 	public static final String SPOED = "spoed";
+	public static final String PICKUPDOCK = "pickupdock";
+	public static final String DROPOFFDOCK = "dropoffduck";
 	public static final String MONGOID = "_id";
 	
 	public static final int STATUSLEEG = 0;
@@ -79,6 +83,8 @@ public class CalendarItem {
 		this.status = CalendarItem.STATUSACTIEVEREIST;
 		this.opmerkingen = "";
 		this.mongoid = "";
+		this.dropoffdock = 0;
+		this.pickupdock = 0;
 		this.spoed = false;
 	}
 	
@@ -97,8 +103,12 @@ public class CalendarItem {
 	 * @param opmerkingen
 	 * @param mongoid
 	 * @param spoed
+	 * @param pickupdock
+	 * @param dropoffdock
 	 */
-	public CalendarItem(int bookingnr, long start, String containernr, String mrn, int kartons, int units, long ETA, boolean gasmeting, char categorie, int status, String opmerkingen, String mongoid, boolean spoed){
+	public CalendarItem(int bookingnr, long start, String containernr, String mrn, int kartons, int units, 
+			long ETA, boolean gasmeting, char categorie, int status, String opmerkingen, String mongoid, 
+			boolean spoed, int pickupdock, int dropoffdock){
 		this.bookingnr = bookingnr;
 		this.start = start;
 		this.containernr = containernr;
@@ -111,6 +121,8 @@ public class CalendarItem {
 		this.status = status;
 		this.opmerkingen = opmerkingen;
 		this.spoed = spoed;
+		this.pickupdock = pickupdock;
+		this.dropoffdock = dropoffdock;
 		this.mongoid = mongoid;
 	}
 	
@@ -170,6 +182,14 @@ public class CalendarItem {
 		return this.spoed;
 	}
 	
+	public int getPickupdock(){
+		return this.pickupdock;
+	}
+	
+	public int getDropoffdock(){
+		return this.dropoffdock;
+	}
+	
 	public void setBookingnr(int bookingnr){
 		this.bookingnr = bookingnr;
 	}
@@ -220,6 +240,14 @@ public class CalendarItem {
 	
 	public void setSpoed(boolean spoed){
 		this.spoed = spoed;
+	}
+	
+	public void setDropoffdock(int dropoffdock){
+		this.dropoffdock = dropoffdock;
+	}
+	
+	public void setPickupdock(int pickupdock){
+		this.pickupdock = pickupdock;
 	}
 	
 	public String toString(){
