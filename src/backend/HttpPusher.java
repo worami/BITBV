@@ -278,7 +278,9 @@ public class HttpPusher {
 				"\"" 	+ CalendarItem.GASMETING 	+ "\":" 	+ item.getGasmeting() 	+ ',' +
 				"\"" 	+ CalendarItem.CATEGORIE 	+ "\":\"" 	+ item.getCategorie() 	+ "\"," +
 				"\"" 	+ CalendarItem.OPMERKINGEN 	+ "\":\"" 	+ item.getOpmerkingen() + "\"," + 
-				"\""	+ CalendarItem.SPOED		+ "\":"		+ item.getSpoed()		+ "}";
+				"\""	+ CalendarItem.SPOED		+ "\":"		+ item.getSpoed()		+ "," +
+				"\"" 	+ CalendarItem.DROPOFFDOCK	+ "\":"		+ item.getDropoffdock() + "," + 
+				"\"" 	+ CalendarItem.PICKUPDOCK 	+ "\":"		+ item.getPickupdock()	+ "}";
 		return result;
 	}
     

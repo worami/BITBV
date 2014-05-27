@@ -126,8 +126,8 @@ public class Splitter {
 		
 		//pickup-/dropoffdock
 		try {
-			pickupdock = Integer.parseInt(CalendarItem.PICKUPDOCK);
-			dropoffdock = Integer.parseInt(CalendarItem.DROPOFFDOCK);
+			pickupdock = Integer.parseInt(map.get(CalendarItem.PICKUPDOCK));
+			dropoffdock = Integer.parseInt(map.get(CalendarItem.DROPOFFDOCK));
 			
 			spoed = Boolean.parseBoolean(map.get(CalendarItem.SPOED));
 		} catch (NumberFormatException e) {

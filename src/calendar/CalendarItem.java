@@ -44,7 +44,7 @@ public class CalendarItem {
 	public static final String TITEL = "title";
 	public static final String SPOED = "spoed";
 	public static final String PICKUPDOCK = "pickupdock";
-	public static final String DROPOFFDOCK = "dropoffduck";
+	public static final String DROPOFFDOCK = "dropoffdock";
 	public static final String MONGOID = "_id";
 	
 	public static final int STATUSLEEG = 0;
