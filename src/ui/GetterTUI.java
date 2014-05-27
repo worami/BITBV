@@ -5,10 +5,8 @@ import java.io.*;
 import backend.*;
 
 public class GetterTUI {
-	//getSynchronize
-	//getRuimDatabaseOp
-	
 	private static Getter getter = new Getter();
+	
 	private static final String MENU = 
 			"s ...... Synchronize\n" +
 			"r ...... Ruim database op\n" + 
@@ -18,15 +16,18 @@ public class GetterTUI {
 		while(true) {
 			System.out.println(MENU);
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-			String input = br.readLine();
-			
-			if (input.charAt(0) == 's') {
-				synchronize();
-			} else if (input.charAt(0) == 'r') {
-				ruimDatabaseOp();
-			} else if (input.charAt(0) == 'x') {
-				sluitAf();
-			} else {
+			String input = br.readLine().toLowerCase();
+			try {
+				if (input.charAt(0) == 's') {
+					synchronize();
+				} else if (input.charAt(0) == 'r') {
+					ruimDatabaseOp();
+				} else if (input.charAt(0) == 'x') {
+					sluitAf();
+				} else {
+					nietHerkend();
+				}
+			} catch (StringIndexOutOfBoundsException e) {
 				nietHerkend();
 			}
 		}
