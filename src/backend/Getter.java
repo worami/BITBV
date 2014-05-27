@@ -14,7 +14,6 @@ public class Getter {
 	HttpPusher httplist;
 	Mailer mail;
 	
-	
 	public Getter(){
 		insight = new InsightConnector("database.proprties");
 		http = new HttpPusher("database.proprties");
@@ -49,19 +48,21 @@ public class Getter {
 		for(CalendarItem item : this.getCompleteCalendarList()){
 			boolean update = insight.getIsBezorgd(item);
 			if(item.getStatus() == CalendarItem.STATUSACTIEVEREIST){
-				
+				//doet niks
 			}
 			if(item.getStatus() == CalendarItem.STATUSVOORSTEL){
-				//spoed? dag voor beschikbaar op
-				
-				//onmogelijke? meer dan een dag voor beschikbaar op unplan
+				//Zet op spoed als een dag voor beschikbaar op wordt ingepland
+				if(item.getStart() > (item.getBeschikbaarOp()-ETAcalculator.DAY) && item.getStart() < item.getBeschikbaarOp()){
+					item.setSpoed(true);
+					update = true;
+				}
 			}
-			if(item.getStatus() == CalendarItem.STATUSGOEDGEKEURD){
+			if(item.getStatus() == CalendarItem.STATUSGOEDGEKEURD || item.getStatus() == CalendarItem.STATUSVOORSTEL ){
 				if(item.getStart() < item.getBeschikbaarOp() && !item.getSpoed()){
 					item.setStatus(CalendarItem.STATUSVERTRAGING);
 					mail.composeMail(item, "Deze container is vertraagd, plan deze opnieuw in");
 					update = true;
-				} else if(item.getStart() < (item.getBeschikbaarOp()-ETAcalculator.DAY) && item.getSpoed()){
+				} else if(item.getStart() <= (item.getBeschikbaarOp()-ETAcalculator.DAY) && item.getSpoed()){
 					item.setStatus(CalendarItem.STATUSVERTRAGING);
 					mail.composeMail(item, "Deze container is vertraagd, plan deze opnieuw in");
 					update = true;
@@ -104,7 +105,7 @@ public class Getter {
 	/** 
 	 * Verwijder al onze (Temptype status en typeid 23) calendaritems uit de applicatie
 	 */
-	public void ruimDatabaseOp(){
+	public void ruimDatabaseOp(){		
 		for(CalendarItem item : Splitter.split(http.sendGet())){
 			//System.out.println(item.toString());
 			http.sendDelete(item);
@@ -126,6 +127,12 @@ public class Getter {
 		return result;
 	}
 	
+	/**
+	 * 
+	 * @param lijst
+	 * @param hashkey
+	 * @return
+	 */
 	public static boolean bevat(List<CalendarItem> lijst, int hashkey){
 		boolean result = false;
 		for(CalendarItem c : lijst){
