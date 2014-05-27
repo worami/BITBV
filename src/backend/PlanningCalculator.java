@@ -6,6 +6,11 @@ import calendar.CalendarItem;
 
 public class PlanningCalculator {
 	
+	private static final int MAX_HOUR_SEPARATION = 13;
+	private static final int MAX_HALFHOUR_SEPARATION = 27; //2 x bovenstaande + 1
+	private static final int MAX_15MIN_SEPARATION = 55; //2 x bovenstaande + 1
+	
+	
 	public static void main(String[] args) {
 		//test getFirstPossibility
 		/*Calendar calendar = Calendar.getInstance();
@@ -75,21 +80,43 @@ public class PlanningCalculator {
 	 * @param toMove Mogelijk te verplaatsen container
 	 */
 	public static void moveToFirstFreeTimeSlot(CalendarItem toMove, List<CalendarItem> list) {
+		int separation; //scheiding tussen twee containers; 60 betekent een container per uur, 30 betekent een container per halfuur, 15 betekent een container per kwartier. Geen andere waarden in zetten.
+		Calendar time = Calendar.getInstance();
+		Calendar initialTime = Calendar.getInstance();
+		time.setTimeInMillis(calculateFirstPossibility(toMove.getStart())*1000);
+		initialTime.setTimeInMillis(calculateFirstPossibility(toMove.getStart())*1000);
 		
+		//Calendar toMoveCal = Calendar.getInstance();
+		//toMoveCal.setTimeInMillis(toMove.getStart()*1000);
+				
 		//TreeMap<CalendarItem, Calendar> map = new TreeMap<CalendarItem,Calendar>();
+		int dayCounter = 0;
 		ArrayList<Calendar> arlist = new ArrayList<Calendar>();
 		for (CalendarItem item : list) {
 			if (!item.equals(toMove)) {
 				Calendar cal = Calendar.getInstance();
 				cal.setTimeInMillis(item.getStart()*1000);
-				//map.put(item, cal);
+				if (time.get(Calendar.YEAR) == cal.get(Calendar.YEAR)
+						&& time.get(Calendar.MONTH) == cal.get(Calendar.MONTH)
+						&& time.get(Calendar.DAY_OF_MONTH) == cal.get(Calendar.DAY_OF_MONTH)) {
+					dayCounter++;
+				}
 				
 				arlist.add(cal);
 			}
 		}
 		
-		Calendar time = Calendar.getInstance();
-		time.setTimeInMillis(calculateFirstPossibility(toMove.getStart())*1000);
+		//zet de separation op de juiste waarde
+		if (dayCounter > MAX_15MIN_SEPARATION) {
+			separation = 0; //als er echt veel te veel containers zijn, wordt de separation 0 en wordt hij gewoon ingepland op de eerstvolgende mogelijkheid
+		} else if (dayCounter > MAX_HALFHOUR_SEPARATION) {
+			separation = 15; //als er redelijk veel containers zijn, wordt hij ingepland op het eerstvolgende mogelijke kwartier
+		} else if (dayCounter > MAX_HOUR_SEPARATION) {
+			separation = 30; //als er lichtelijk veel containers zijn, wordt hij ingepland op het eerstvolgende mogelijke halfuur
+		} else {
+			separation = 60; //als er weinig containers zijn, wordt hij ingepland op het eerstvolgende mogelijke uur.
+		}
+		
 		boolean found = false;
 		
 		
@@ -97,11 +124,11 @@ public class PlanningCalculator {
 		while (!found) {
 			boolean okay = true;
 			
-			Calendar beforeCal = (Calendar) time.clone(); //is een Calendar met een tijd van 1 uur voor time.
-			beforeCal.add(Calendar.HOUR_OF_DAY, -1);
+			Calendar beforeCal = (Calendar) time.clone(); //is een Calendar met een tijd van SEPARATION minuten voor time.
+			beforeCal.add(Calendar.MINUTE, separation*-1);
 			
-			Calendar afterCal = (Calendar) time.clone(); //is een Calendar met een tijd van 1 uur na time.
-			afterCal.add(Calendar.HOUR_OF_DAY, 1);
+			Calendar afterCal = (Calendar) time.clone(); //is een Calendar met een tijd van SEPARATION minuten na time.
+			afterCal.add(Calendar.MINUTE, separation);
 			
 			for (Calendar c : arlist) {
 				if (c.after(beforeCal) && c.before(afterCal)) {
@@ -117,6 +144,11 @@ public class PlanningCalculator {
 			}
 		}
 		
-		toMove.setStart(time.getTimeInMillis()/1000);
+		//kijk tenslotte of de container niet over een dag heen is getild; als dit wel zo is wordt de container weer teruggeplaatst naar de eerstvolgende mogelijkheid die in het begin is berekend.
+		if (time.get(Calendar.DAY_OF_MONTH) == initialTime.get(Calendar.DAY_OF_MONTH)) {
+			toMove.setStart(time.getTimeInMillis()/1000);
+		} else {
+			toMove.setStart(initialTime.getTimeInMillis()/1000);
+		}
 	}
 }
