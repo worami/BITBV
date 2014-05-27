@@ -45,29 +45,9 @@ public class Getter {
 		}
 	}
 	
-	private void updateETA(){
-		for(CalendarItem item : this.getCompleteCalendarList()){	
-			//mail.Send("bitbv2014@gmail.com", "Test: " + item.getContainernr(), "Testjes: " + item.getBookingnr());
-			if(item.getStatus() == CalendarItem.STATUSACTIEVEREIST){
-				if(item.getBeschikbaarOp()-item.getStart() > ETAcalculator.DAY){
-					item.setStatus(CalendarItem.STATUSVERTRAGING); 
-					item.setOpmerkingen(item.getOpmerkingen() + " Error te vroeg ingepland");
-				} 
-			} if(item.getStatus() == CalendarItem.STATUSGOEDGEKEURD){
-				if(item.getBeschikbaarOp()-item.getStart() <= ETAcalculator.DAY && item.getBeschikbaarOp()-item.getStart() >= 0 ){
-					//item.setStatus(CalendarItem.STATUSVOORSTELSPOED);
-				} else if(item.getBeschikbaarOp() > item.getStart()){
-					item.setStatus(CalendarItem.STATUSVERTRAGING);
-					item.setOpmerkingen(item.getOpmerkingen() + " Error er is een vertraging bij de NS");
-				}
-			}
-			own.putCalendarItem(item);
-			http.sendUpdate(item);
-		}
-	}
-	
 	private void updateStatus(){
 		for(CalendarItem item : this.getCompleteCalendarList()){
+			boolean update = insight.getIsBezorgd(item);
 			if(item.getStatus() == CalendarItem.STATUSACTIEVEREIST){
 				
 			}
@@ -80,23 +60,29 @@ public class Getter {
 				if(item.getStart() < item.getBeschikbaarOp() && !item.getSpoed()){
 					item.setStatus(CalendarItem.STATUSVERTRAGING);
 					mail.composeMail(item, "Deze container is vertraagd, plan deze opnieuw in");
+					update = true;
 				} else if(item.getStart() < (item.getBeschikbaarOp()-ETAcalculator.DAY) && item.getSpoed()){
 					item.setStatus(CalendarItem.STATUSVERTRAGING);
 					mail.composeMail(item, "Deze container is vertraagd, plan deze opnieuw in");
+					update = true;
 				}
+			}
+			//update alle item waar iets aan is veranderd
+			if(update){
+				own.putCalendarItem(item);
+				http.sendUpdate(item);
 			}
 		}
 	}
 	private void updateStart(){
 		List<CalendarItem> lijst = this.getCompleteCalendarList();
 		for(CalendarItem item : lijst){
-			
 			if(item.getStatus() == CalendarItem.STATUSACTIEVEREIST){
 				item.setStart(PlanningCalculator.calculateFirstPossibility(item.getStart()));
 				PlanningCalculator.moveToFirstFreeTimeSlot(item, lijst);
+				own.putCalendarItem(item);
+				http.sendUpdate(item);
 			}
-			own.putCalendarItem(item);
-			http.sendUpdate(item);
 		}
 	}
 	
@@ -128,6 +114,8 @@ public class Getter {
 		
 	public List<CalendarItem> getCompleteCalendarList(){
 		List<CalendarItem> result = insight.getCalendarList();
+		//voeg ook de oude lijst toe
+		//result.addAll(insight.getCalendarListOud());
 		for(CalendarItem item : result){
 			own.getCalendarData(item);
 			
