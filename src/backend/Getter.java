@@ -55,7 +55,7 @@ public class Getter {
 				} 
 			} if(item.getStatus() == CalendarItem.STATUSGOEDGEKEURD){
 				if(item.getBeschikbaarOp()-item.getStart() <= ETAcalculator.DAY && item.getBeschikbaarOp()-item.getStart() >= 0 ){
-					item.setStatus(CalendarItem.STATUSVOORSTELSPOED);
+					//item.setStatus(CalendarItem.STATUSVOORSTELSPOED);
 				} else if(item.getBeschikbaarOp() > item.getStart()){
 					item.setStatus(CalendarItem.STATUSVERTRAGING);
 					item.setOpmerkingen(item.getOpmerkingen() + " Error er is een vertraging bij de NS");
@@ -75,9 +75,6 @@ public class Getter {
 				//spoed? dag voor beschikbaar op
 				
 				//onmogelijke? meer dan een dag voor beschikbaar op unplan
-			}
-			if(item.getStatus() == CalendarItem.STATUSVOORSTELSPOED){
-				
 			}
 			if(item.getStatus() == CalendarItem.STATUSGOEDGEKEURD){
 				if(item.getStart() < item.getBeschikbaarOp() && !item.getSpoed()){

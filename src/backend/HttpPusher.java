@@ -240,6 +240,10 @@ public class HttpPusher {
         }
     }
     
+    private void loadConfiguration(String config){
+    	
+    }
+    
     public String toHTTPString(CalendarItem item){
 		//Zet de datum beschikbaar op om in een string
     	SimpleDateFormat sdf = new SimpleDateFormat("EEE d MMM yyyy 'om' HH:mm");
@@ -288,7 +292,9 @@ public class HttpPusher {
 		//http.sendGet();
 		//http.sendPost();
 		
-		System.out.println(http.getDropdownConfiguration());
+		//System.out.println(http.getDropdownConfiguration());
+		
+		//String config = '{ "operatorid": 23, "templatetype": "announcementslist", "headercolors": { "text": "#ffffff", "background": "#2c3e50" }, "rowsperpage": 2, "filter": { "field": "date", "value": 1 }, "fields": [ { "type": "textfield", "mandatory": true, "name": "bookingNR", "label": "Boekingnummer", "width": 10 }, { "type": "textfield", "mandatory": true, "name": "containerNR", "label": "Containernummer", "width": 10  }, { "type": "textfield", "mandatory": true, "name": "mrn", "label": "MRN", "width": 10  }, { "type": "number", "mandatory": true, "name": "kartons", "label": "Kartons", "width": 10  }, { "type": "number", "mandatory": true, "name": "units", "label": "Units", "width": 10  }, { "type": "datepicker", "name": "startdate", "label": "Geplande datum", "width": 10  }, { "type": "datepicker", "name": "beschikbaarop", "label": "Beschikbaar op", "width": 10  }, { "type": "checkbox", "name": "gasmeting", "label": "Gasmeting", "width": 10, "default": false }, { "type": "dropdown", "name": "categorie", "label": "Categorie", "width": 10, "dropdownid":1 }, { "type": "textarea", "name": "opmerkingen", "label": "Opmerkingen", "width": 10, "default": false } ], "editable": true, "deletable": true, "creatable": false, "onsessionchange": { "validationvalue": "BITBV", "enabled": true } }';
  
 	}
  
