@@ -43,7 +43,7 @@ public class GetterTUI {
 	}
 
 	private static void sluitAf() {
-		System.out.println("Sluit systeem af.");
+		System.out.println("Sluit systeem af");
 		System.exit(0);
 	}
 
