@@ -56,19 +56,6 @@ public class Hasher {
 		return Long.parseLong(hashString,2);
 	}
 	
-	private static String clean(String str) { //even apart gemaakt ivm testing
-		return str.replaceAll(" ","");
-	}
-	
-	//requires length 4, allemaal hoofdletters
-	private static int nr(String str) {
-		int result = 0;
-		for (int i = 0; i < 4; i++) {
-			result += (str.charAt(i) - 'A') * Math.pow(26,3-i);
-		}
-		return result;
-	}
-	
 	//levert bookingnr en containernr op.
 	public static final Object[] reverse(long hash) {
 		Object[] result = new Object[2];
@@ -93,6 +80,19 @@ public class Hasher {
 		String cnr2 = cnr2_temp.substring(0,6)+" "+ cnr2_temp.substring(6,7);
 		
 		result[1] = ""+cnr1_1 + cnr1_2 + cnr1_3 + cnr1_4 + " " + cnr2;
+		return result;
+	}
+
+	private static String clean(String str) { //even apart gemaakt ivm testing
+		return str.replaceAll(" ","");
+	}
+	
+	//requires length 4, allemaal hoofdletters
+	private static int nr(String str) {
+		int result = 0;
+		for (int i = 0; i < 4; i++) {
+			result += (str.charAt(i) - 'A') * Math.pow(26,3-i);
+		}
 		return result;
 	}
 }
