@@ -121,7 +121,7 @@ public class PlanningCalculator {
 		
 		
 		
-		while (!found) {
+		while (!found && separation > 0) { //als separation == 0 heeft het toch geen zin om de hele loop te doorlopen.
 			boolean okay = true;
 			
 			Calendar beforeCal = (Calendar) time.clone(); //is een Calendar met een tijd van SEPARATION minuten voor time.
