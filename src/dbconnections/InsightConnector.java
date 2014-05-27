@@ -12,11 +12,46 @@ import calendar.CalendarItem;
 
 public class InsightConnector extends Connector {
 	
-	final String vanaf = "1398942018000"; //Datum vanaf waar de db wordt gelezen
+	final String vanaf = "1375687431000";//; //Datum vanaf waar de db wordt gelezen
+	final String tot = "1376637831000";
+	final String vanafTwee = "1398942018000";
 	
 	public InsightConnector(String properties) {
 		super(properties);
 	}
+	
+	/**
+	 * Een lijst met calendarItems vanuit de modality db
+	 * @return
+	 */
+	public List<CalendarItem> getCalendarListOud(){
+    	List<CalendarItem> result = new ArrayList<CalendarItem>();
+    	this.Connect();
+    	try {
+			rs = st.executeQuery("SELECT "
+					+ "`Booking`, "
+					+ "`Pickup`, " //kleine fix was Pickup
+					+ "`ContainerNumber`, "
+					+ "`ImportDocNr`, "
+					+ "`NumberColli` "
+					+ "FROM  " + this.getTabel() + " "
+					+ "WHERE `Client` = 'TIMBAL' AND `Pickup` BETWEEN " + this.vanaf + " AND " + this.tot);
+			while(rs.next()){
+				//System.out.println("Calendar start: " + rs.getLong(2) + " CNR: " + rs.getString(3));
+				CalendarItem booking = new CalendarItem(
+						rs.getInt(1), 
+						rs.getLong(2)/1000, // + 3*ETAcalculator.DAY, 
+						rs.getString(3), 
+						rs.getString(4), 
+						rs.getInt(5), 0);
+				result.add(booking);
+			}
+		} catch (SQLException e) {
+			System.err.println("Error getCalendarList: " + e.getMessage());
+		}
+    	this.Close();
+    	return result;
+    }
 	
 	/**
 	 * Een lijst met calendarItems vanuit de modality db
@@ -28,12 +63,12 @@ public class InsightConnector extends Connector {
     	try {
 			rs = st.executeQuery("SELECT "
 					+ "`Booking`, "
-					+ "`Pickup`, "
+					+ "`Pickup`, " //kleine fix was Pickup
 					+ "`ContainerNumber`, "
 					+ "`ImportDocNr`, "
 					+ "`NumberColli` "
 					+ "FROM  " + this.getTabel() + " "
-					+ "WHERE `Client` = 'TIMBAL' AND `Pickup` > " + this.vanaf);
+					+ "WHERE `Client` = 'TIMBAL' AND `Pickup` > " + this.vanafTwee);//BETWEEN " + this.vanaf + " AND " + this.tot);
 			while(rs.next()){
 				//System.out.println("Calendar start: " + rs.getLong(2) + " CNR: " + rs.getString(3));
 				CalendarItem booking = new CalendarItem(
@@ -50,6 +85,33 @@ public class InsightConnector extends Connector {
     	this.Close();
     	return result;
     }
+	
+	public boolean getIsBezorgd(CalendarItem item){
+		boolean result = false;
+		this.Connect();
+    	try {
+			rs = st.executeQuery("SELECT "
+					+ "`GateOUT` "
+					+ "FROM  " + this.getTabel() + " "
+					+ "WHERE `Client` = 'TIMBAL' AND `Booking` = " + item.getBookingnr() + " AND ContainerNumber = '" + item.getContainernr() + "'");
+			while(rs.next()){
+				//System.out.println("Calendar start: " + rs.getLong(2) + " CNR: " + rs.getString(3));
+				long gateout = rs.getLong(1);
+				//System.out.println("gateout: " + gateout);
+				if(gateout != 0){
+					result = true;
+					item.setStatus(CalendarItem.STATUSBEZORGD);
+					if(gateout < 1401181915000l){
+						item.setStart(gateout/1000);
+					}
+				}
+			}
+		} catch (SQLException e) {
+			System.err.println("Error getCalendarList: " + e.getMessage());
+		}
+    	this.Close();
+    	return result;
+	}
 	
 	/**
 	 * Funcite om de ETA variebelen mee op te vragen uit de database van een bepaald calendarItem
@@ -88,25 +150,33 @@ public class InsightConnector extends Connector {
 		String datum;
 		String tijd;
 		int booking;
+		String container;
 
 		List<String> queries = new ArrayList<String>();
+		
+		//ArrivalTimePickup ArrivalDatePickup ArrivalPickup
+		//GateOUTdate GateOUTtime GateOUT
+		//GateINdate GateINtime GateIN
+		//DateOutgoing TimeOutgoing Outgoing
 		
 		date.Connect();
 		try {
 			date.rs = date.st.executeQuery("SELECT "
-					+ "PickupDate, "
-					+ "PickupTime, "
-					+ "Booking "
+					+ "ArrivalDatePickup, "
+					+ "ArrivalTimePickup, "
+					+ "Booking, "
+					+ "ContainerNumber "
 					+ "FROM "  + date.getTabel()
-					+ " WHERE Client = 'TIMBAL' AND Pickup IS NULL");
+					+ " WHERE Client = 'TIMBAL' AND ArrivalPickup IS NULL");
 			while(date.rs.next()){
 				datum = date.rs.getString(1);
 				tijd = date.rs.getString(2);
 				booking = date.rs.getInt(3);
+				container = date.rs.getString(4);
 				if(datum.length() >1 && tijd.length() > 1 && booking > 100){
 					Date nieuw = fromDB.parse(datum + " " + tijd + " +0200");
 					queries.add("UPDATE " + date.getTabel() + " SET " + 
-						"Pickup = " + nieuw.getTime() +  " WHERE Booking = " + booking);
+						"ArrivalPickup = " + nieuw.getTime() +  " WHERE Booking = " + booking + " AND ContainerNumber = '" + container + "'");
 				}
 			}
 		} catch (SQLException e) {
@@ -117,17 +187,16 @@ public class InsightConnector extends Connector {
 		}
 		date.Close();
 		
+		date.Connect();
 		for(String s : queries){
-			date.Connect();
 			try {
 			    date.st.executeUpdate(s);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			date.Close();
 		}
-		
+		date.Close();
 	}
 	
 	public static void main(String[] args){

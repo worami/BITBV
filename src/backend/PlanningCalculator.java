@@ -86,13 +86,12 @@ public class PlanningCalculator {
 				
 				arlist.add(cal);
 			}
+			
 		}
 		
 		Calendar time = Calendar.getInstance();
 		time.setTimeInMillis(calculateFirstPossibility(toMove.getStart())*1000);
 		boolean found = false;
-		
-		
 		
 		while (!found) {
 			boolean okay = true;
