@@ -6,6 +6,7 @@ import backend.*;
 
 public class GetterTUI {
 	private static Getter getter = new Getter();
+	private static final boolean PRINTTIME = true;
 	
 	private static final String MENU = 
 			"s ...... Synchronize\n" +
@@ -18,6 +19,7 @@ public class GetterTUI {
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			String input = br.readLine().toLowerCase();
 			try {
+				long start = System.currentTimeMillis();
 				if (input.charAt(0) == 's') {
 					synchronize();
 				} else if (input.charAt(0) == 'r') {
@@ -27,6 +29,10 @@ public class GetterTUI {
 				} else {
 					nietHerkend();
 				}
+				long time = System.currentTimeMillis() - start;
+				if (PRINTTIME) {
+					System.out.println("Elapsed time (ms): " + time);
+				}
 			} catch (StringIndexOutOfBoundsException e) {
 				nietHerkend();
 			}
@@ -35,7 +41,6 @@ public class GetterTUI {
 
 	private static void synchronize() {
 		getter.synchronize();
-		System.out.println("Gesynchroniseerd.");
 	}
 
 	private static void ruimDatabaseOp() {
