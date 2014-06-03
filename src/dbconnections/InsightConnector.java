@@ -73,7 +73,7 @@ public class InsightConnector extends Connector {
 				//System.out.println("Calendar start: " + rs.getLong(2) + " CNR: " + rs.getString(3));
 				CalendarItem booking = new CalendarItem(
 						rs.getInt(1), 
-						rs.getLong(2)/1000 + 3*ETAcalculator.DAY, 
+						rs.getLong(2)/1000 + ETAcalculator.DAY + 12*ETAcalculator.HOUR, 
 						rs.getString(3), 
 						rs.getString(4), 
 						rs.getInt(5), 0);
