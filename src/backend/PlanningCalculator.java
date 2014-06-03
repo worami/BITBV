@@ -1,5 +1,6 @@
 package backend;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import calendar.CalendarItem;
@@ -9,9 +10,13 @@ public class PlanningCalculator {
 	private static final int MAX_HOUR_SEPARATION = 13;
 	private static final int MAX_HALFHOUR_SEPARATION = 27; //2 x bovenstaande + 1
 	private static final int MAX_15MIN_SEPARATION = 55; //2 x bovenstaande + 1
+	private static final boolean TESTMODE = true; //testmodus voor de methode moveToFirstFreeTimeSlot().
 	
 	
 	public static void main(String[] args) {
+		System.out.println(1401368400L);
+		System.out.println(calculateFirstPossibility(1401368400L));
+		
 		//test getFirstPossibility
 		/*Calendar calendar = Calendar.getInstance();
 		calendar.set(2014, 4, 20, 13, 12);
@@ -70,7 +75,6 @@ public class PlanningCalculator {
 		
 		result = cal.getTimeInMillis()/1000;
 		//System.out.println("Na:   " + cal.getTime() + "; " + result);
-		
 		return result;
 	}
 	
@@ -150,5 +154,18 @@ public class PlanningCalculator {
 		} else {
 			toMove.setStart(initialTime.getTimeInMillis()/1000);
 		}
+		
+		if (TESTMODE && !initialTime.equals(time)) { //stukje code voor testen; schrijft op de standard out waar de container vandaan komt en naartoe verplaatst wordt.
+			System.out.println("Container verplaatst van " + date(initialTime) + " naar " + date(time));
+			if (time.get(Calendar.DAY_OF_MONTH) != initialTime.get(Calendar.DAY_OF_MONTH)) { //als de initial dag en de dag waar hij naar verplaatst is van elkaar verschillen, gooi het hele programma plat.
+				System.out.println("Container over dag heen getild - foutmelding");
+				System.exit(0);
+			}
+		}
+	}
+	
+	private static String date(Calendar cal) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+		return sdf.format(cal.getTime());
 	}
 }
