@@ -86,6 +86,39 @@ public class InsightConnector extends Connector {
     	return result;
     }
 	
+	/**
+	 * Een lijst met calendarItems vanuit de modality db
+	 * @return
+	 */
+	public CalendarItem getCalendarItem(String nummer){
+    	CalendarItem result = null;
+    	this.Connect();
+    	try {
+			rs = st.executeQuery("SELECT "
+					+ "`Booking`, "
+					+ "`Pickup`, " //kleine fix was Pickup
+					+ "`ContainerNumber`, "
+					+ "`ImportDocNr`, "
+					+ "`NumberColli` "
+					+ "FROM  " + this.getTabel() + " "
+					+ "WHERE `Client` = 'TIMBAL' AND `Pickup` > " + this.vanafTwee + " AND ContainerNumber = '" + nummer + "'");//BETWEEN " + this.vanaf + " AND " + this.tot);
+			while(rs.next()){
+				//System.out.println("Calendar start: " + rs.getLong(2) + " CNR: " + rs.getString(3));
+				CalendarItem booking = new CalendarItem(
+						rs.getInt(1), 
+						rs.getLong(2)/1000 + ETAcalculator.DAY + 12*ETAcalculator.HOUR, 
+						rs.getString(3), 
+						rs.getString(4), 
+						rs.getInt(5), 0);
+				result = booking;
+			}
+		} catch (SQLException e) {
+			System.err.println("Error getCalendarList: " + e.getMessage());
+		}
+    	this.Close();
+    	return result;
+    }
+	
 	public boolean getIsBezorgd(CalendarItem item){
 		boolean result = false;
 		this.Connect();

@@ -2,6 +2,7 @@ package ui;
 
 import java.io.*;
 
+import calendar.CalendarItem;
 import backend.*;
 
 public class GetterTUI {
@@ -11,7 +12,10 @@ public class GetterTUI {
 	private static final String MENU = 
 			"s ...... Synchronize\n" +
 			"r ...... Ruim database op\n" + 
-			"x ...... Sluit programma";
+			"x ...... Sluit programma\n" + 
+			"u ...... Update status\n" +
+			"! ...... Update spoed\n" +
+			"b ...... Bericht";
 	
 	public static void main(String[] args) throws IOException {
 		while(true) {
@@ -26,7 +30,16 @@ public class GetterTUI {
 					ruimDatabaseOp();
 				} else if (input.charAt(0) == 'x') {
 					sluitAf();
-				} else {
+				} else if (input.charAt(0) == 'u') {
+					int status = Integer.parseInt(input.charAt(2) + "");
+					//System.out.println("status: " + status);
+					update(status);
+				} else if (input.charAt(0) == '!'){
+					System.out.println("unit: " + input.charAt(2));
+					updateSpoed(input.charAt(2));
+				} else if (input.charAt(0) == 'b'){
+					bericht(input.toString().substring(2));
+				} else{
 					nietHerkend();
 				}
 				long time = System.currentTimeMillis() - start;
@@ -51,6 +64,21 @@ public class GetterTUI {
 	private static void sluitAf() {
 		System.out.println("Sluit systeem af.");
 		System.exit(0);
+	}
+	
+	private static void update(int status){
+		getter.updateCalendarItem("OOLU 858002 6", status);
+	}
+	
+	private static void updateSpoed(int nummer){
+		if(nummer == 1){
+			getter.updateSpoed("OOLU 858002 6");
+		}
+		
+	}
+	
+	private static void bericht(String bericht){
+		getter.sendNotification(bericht);
 	}
 
 	private static void nietHerkend() {

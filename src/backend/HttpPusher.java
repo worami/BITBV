@@ -108,6 +108,12 @@ public class HttpPusher {
 		} catch (IOException e) {
 			System.err.println("error: httppusher sendPost 2");
 		} 
+		try {
+			Thread.sleep(50);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void deleteAll(){
@@ -155,6 +161,36 @@ public class HttpPusher {
 		}
 	}
 	
+	public void sendNotificatie(String bericht){
+		String urlnew = "http://insight.exomodal.com/collectionapi/notifications";
+		HttpClient client = HttpClientBuilder.create().build();
+		HttpPost post = new HttpPost(urlnew);
+ 
+		String test = "{\"userid\":\"KcwyZZvzqmYxR2a2B\",\"type\":\"alert\",\"timestamp\":1402992903000,\"message\":\"Dit is een test van wouter\",\"read\":false}";
+
+		// add header
+		post.setHeader("X-Auth-Token", token);
+		//System.out.println("token: " + token);
+
+		//String test = "{\"operatorid\":23,\"templatetype\":\"status\",\"typeid\":2,\"id\":7,\"allDay\":false,\"start\":1399970000,\"end\":1399973000,\"title\":\"HOI blala\"}";
+		StringEntity se;
+		try {
+			se = new StringEntity(this.toNotificationHTTP(bericht));
+		    post.setEntity(se);
+		    client.execute(post);
+		} catch (UnsupportedEncodingException e) {
+			System.err.println("error: httppusher sendPost 1");
+		} catch (IOException e) {
+			System.err.println("error: httppusher sendPost 2");
+		} 
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public String getConfiguration(){
 		HttpClient client = HttpClientBuilder.create().build();
 		HttpGet request = new HttpGet("http://insight.exomodal.com:80/collectionapi/calendar_configuration");
@@ -179,7 +215,7 @@ public class HttpPusher {
 	
 	public String getListConfiguration(){
 		HttpClient client = HttpClientBuilder.create().build();
-		HttpGet request = new HttpGet("http://insight.exomodal.com:80/collectionapi/list_configuration");
+		HttpGet request = new HttpGet("http://insight.exomodal.com:80/collectionapi/list_rows");
 		
 		// add request header
 		request.setHeader("X-Auth-Token", token);
@@ -221,6 +257,28 @@ public class HttpPusher {
 		return result;
 	}
 	
+	public String getNotifications(){
+		HttpClient client = HttpClientBuilder.create().build();
+		HttpGet request = new HttpGet("http://insight.exomodal.com/collectionapi/notifications");
+		
+		// add request header
+		request.setHeader("X-Auth-Token", token);
+ 
+		HttpResponse response;
+
+		String result = "";
+		
+		try {
+			response = client.execute(request);
+			BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+			result = rd.readLine();
+		} catch (IOException e) {
+			System.err.println("error: http get " + e.getMessage());
+		}
+ 
+		return result;
+	}
+	
 	/**
      * Laad de connectie eigenschappen uit een properties bestand
      */
@@ -230,7 +288,7 @@ public class HttpPusher {
             httpprops.load(in);
             token = httpprops.getProperty("http.token");
             url = httpprops.getProperty("http.url");
-            temptype = httpprops.getProperty("http.temptype");
+            temptype = httpprops.getProperty("http.temptype"); //"statustransport"; //
             operatorid = 23; //httpprops.getProperty("http.operatorid");
         } catch (FileNotFoundException ex) {
             System.err.println(ex.getMessage());
@@ -238,6 +296,10 @@ public class HttpPusher {
         } catch (IOException e){
         	System.err.println(e.getMessage());
         }
+    }
+    
+    public void fakeUpdate(CalendarItem item, int status){
+    	
     }
     
     private void loadConfiguration(String config){
@@ -249,8 +311,11 @@ public class HttpPusher {
     	SimpleDateFormat sdf = new SimpleDateFormat("EEE d MMM yyyy 'om' HH:mm");
 		String date = "\"" + sdf.format((item.getBeschikbaarOp() - (ETAcalculator.HOUR * 2))*1000) + "\"";
 		
+		SimpleDateFormat sdftwee = new SimpleDateFormat("EEE d MMM yyyy 'om' HH:mm");
+		String datestart = "\"" + sdf.format((item.getStart() - (ETAcalculator.HOUR * 2))*1000) + "\"";
+		
 		//Zet de titel van een calendar item
-		String title = "- " + item.getKartons();
+		String title = "- " + item.getContainernr();
 		//Zet spoed in de naam als er spoed is
 		if(item.getSpoed()){
 			title = title + " SPOED!";
@@ -266,7 +331,7 @@ public class HttpPusher {
 				"\"" 	+ CalendarItem.CALLS 		+ "\":\"" 	+ item.getBookingnr() 	+ "\"," +
 				"\"" 	+ CalendarItem.ALLDAY 		+ "\":" 	+ false 				+ ',' +
 				"\"" 	+ CalendarItem.START 		+ "\":" 	+ item.getStart() 		+ ',' +
-				"\"" 	+ "startlist" 				+ "\":" 	+ item.getStart()*1000	+ ',' +
+				"\"" 	+ "startlist" 				+ "\":" 	+ datestart				+ ',' +
 				"\"" 	+ CalendarItem.END 			+ "\":" 	+ item.getEind() 		+ ',' +
 				"\"" 	+ CalendarItem.BOOKINGNR 	+ "\":" 	+ item.getBookingnr() 	+ ',' +
 				"\"" 	+ CalendarItem.CONTAINERNR 	+ "\":\"" 	+ item.getContainernr() + "\"," +
@@ -280,19 +345,45 @@ public class HttpPusher {
 				"\"" 	+ CalendarItem.OPMERKINGEN 	+ "\":\"" 	+ item.getOpmerkingen() + "\"," + 
 				"\""	+ CalendarItem.SPOED		+ "\":"		+ item.getSpoed()		+ "," +
 				"\"" 	+ CalendarItem.DROPOFFDOCK	+ "\":"		+ item.getDropoffdock() + "," + 
-				"\"" 	+ CalendarItem.PICKUPDOCK 	+ "\":"		+ item.getPickupdock()	+ "}";
+				"\"" 	+ CalendarItem.PICKUPDOCK 	+ "\":"		+ item.getPickupdock()	+ "," +
+				"\""	+ "selectionvalue"			+ "\":\""	+ item.getContainernr() + "\"}";
+		System.out.println(result);
 		return result;
 	}
-    
+    /**
+    - id: integer;              (When selected operatorid all users will get the same id for this message)
+    - userid: String;           (Optional, only when operatorid is not specified)
+    - operatorid: integer;      (Optional, only when userid is not specified, will not be stored in the collection: only used for collection API)
+    - type: String;             (warning, alert)
+    - timestamp: long;
+    - title: HTML/String;       (Optional, only for type: alert, default: Alert)
+    - message: HTML/String;
+    - read: boolean;
+    - readtimestamp: long;      (Optional, only when read is true)  **/
+    public String toNotificationHTTP(String bericht){
+    	String result = "{" +
+    			//"\"" 	+ "id" 			+ "\":" 		+ this.operatorid 	'+ ',' +
+    			"\"" 	+ "userid"	 	+ "\":\"" 		+ "KcwyZZvzqmYxR2a2B"+ "\"," +
+    			"\"" 	+ "type" 		+ "\":\"" 		+ "alert"	 		+ "\"," +
+    			"\"" 	+ "timestamp" 	+ "\":" 		+ 1402054601000l	+ "," +
+    			//"\"" 	+ "title" 		+ "\":\"" 		+ "bericht"			+ "\"," +
+    			"\"" 	+ "message" 	+ "\":\"" 		+ bericht 			+ "\"," +
+    			"\"" 	+ "read" 		+ "\":"			+ false				+ "}";
+    	return result;
+    }
     
 	
 	public static void main(String[] args) throws Exception {
 		 
 		HttpPusher http = new HttpPusher("database.proprties");
- 
+		//http.sendNotificatie("ik ben het!");
+		
+		//System.out.println("notify: " + http.getNotifications());
 		//System.out.println(http.sendGet());
 		//http.sendGet();
 		//http.sendPost();
+		HttpPusher httplist = new HttpPusher("httplist.proprties");
+		System.out.println(httplist.getListConfiguration());
 		
 		//System.out.println(http.getDropdownConfiguration());
 		

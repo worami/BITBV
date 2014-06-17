@@ -12,6 +12,8 @@ public class Getter {
 	OwnConnector own;
 	HttpPusher http;
 	HttpPusher httplist;
+	HttpPusher searchlist;
+	HttpPusher gaslist;
 	Mailer mail;
 	
 	public Getter(){
@@ -19,6 +21,8 @@ public class Getter {
 		http = new HttpPusher("database.proprties");
 		own = new OwnConnector("own.proprties");
 		httplist = new HttpPusher("httplist.proprties");
+		searchlist = new HttpPusher("search.proprties");
+		gaslist = new HttpPusher("gaslist.proprties");
 		mail = new Mailer("database.proprties");
 	}
 	
@@ -98,7 +102,12 @@ public class Getter {
 	private void pushNaarApplicatie(){
 		for(CalendarItem item : this.getCompleteCalendarList()){
 			http.sendPost(item);
+			
 			httplist.sendPost(item);
+			if(item.getGasmeting()){
+				gaslist.sendPost(item);
+			}
+			searchlist.sendPost(item);
 		}
 	}
 	
@@ -110,15 +119,32 @@ public class Getter {
 			//System.out.println(item.toString());
 			http.sendDelete(item);
 		}
-		own.clearDatabase();
+		//own.clearDatabase();
 	}
-		
+	
+	public void updateCalendarItem(String nummer, int status){
+		CalendarItem result = insight.getCalendarItem(nummer);
+		own.getCalendarData(result);
+		result.setStatus(status);
+		own.putCalendarItem(result);
+		http.sendUpdate(result);
+	}
+	
+	public void updateSpoed(String nummer){
+		CalendarItem result = insight.getCalendarItem(nummer);
+		own.getCalendarData(result);
+		result.setSpoed(!result.getSpoed());
+		own.putCalendarItem(result);
+		http.sendUpdate(result);
+	}
+	
 	public List<CalendarItem> getCompleteCalendarList(){
 		List<CalendarItem> result = insight.getCalendarList();
 		//voeg ook de oude lijst toe
 		//result.addAll(insight.getCalendarListOud());
 		for(CalendarItem item : result){
 			own.getCalendarData(item);
+			//System.out.println("item!");
 			
 			//Update de ETA informatie
 			long[] etavar = insight.getETAinfo(item);
@@ -141,6 +167,10 @@ public class Getter {
 			}
 		}
 		return result;
+	}
+	
+	public void sendNotification(String bericht){
+		http.sendNotificatie(bericht);
 	}
 	
 	public static void main(String[] args) {
